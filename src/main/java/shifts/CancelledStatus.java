@@ -4,26 +4,25 @@ import users.Employee;
 
 public class CancelledStatus implements ShiftStatus {
 
+	private static final String CANNOT_COMPLETE = "Cannot complete a cancelled shift.";
+	private static final String CANNOT_ASSIGN = "Cannot assign an employee to a cancelled shift.";
+
 	public CancelledStatus() {
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
 	public void assignEmployee(Shift shift, Employee employee) {
-		// TODO Auto-generated method stub
-		
+		throw new IllegalStateException(CANNOT_ASSIGN);
 	}
 
 	@Override
 	public void cancel(Shift shift) {
-		// TODO Auto-generated method stub
-		
+		return;
 	}
 
 	@Override
 	public void complete(Shift shift) {
-		// TODO Auto-generated method stub
-		
+		throw new IllegalStateException(CANNOT_COMPLETE);
 	}
 
 

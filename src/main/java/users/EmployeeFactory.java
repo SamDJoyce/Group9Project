@@ -29,7 +29,7 @@ public class EmployeeFactory {
 								String name,
 								String email,
 								String type,
-								int seniority
+								Long   seniority
 								) {
 		if (FULL_TIME.equalsIgnoreCase(type)) {
 			return new FullTimeEmployee.Builder()
@@ -83,7 +83,7 @@ public class EmployeeFactory {
 						   .setName(name)
 						   .setEmail(email)
 						   .setType(EmployeeType.FULL_TIME)
-						   .setSeniority(0)
+						   .setSeniority(0L)
 						   .setElStrat(new FullTimeEligibility())
 						   .build();
 		}
@@ -92,7 +92,7 @@ public class EmployeeFactory {
 		 				   .setName(name)
 		 				   .setEmail(email)
 		 				   .setType(EmployeeType.PART_TIME)
-		 				   .setSeniority(0)
+		 				   .setSeniority(0L)
 						   .setElStrat(new PartTimeEligibility())
 		 				   .build();
 		}
@@ -101,7 +101,7 @@ public class EmployeeFactory {
 						 .setName(name)
 						 .setEmail(email)
 						 .setType(EmployeeType.CASUAL)
-						 .setSeniority(0)
+						 .setSeniority(0L)
 						 .setElStrat(new CasualEligibility())
 						 .build();
 		}

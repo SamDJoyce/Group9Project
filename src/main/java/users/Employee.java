@@ -12,7 +12,7 @@ public abstract class Employee extends User {
 
 	// Fields
 	protected EmployeeType type;
-	protected int 		   seniority;
+	protected Long 		   seniority;
 	protected ShiftEligibilityStrat elStrat;
 	
 	// Constructors
@@ -28,26 +28,50 @@ public abstract class Employee extends User {
 		this.type = type;
 	}
 
-	public int getSeniority() {
+	public Long getSeniority() {
 		return seniority;
 	}
 
-	public void setSeniority(int seniorityPoints) {
+	public void setSeniority(Long seniorityPoints) {
 		this.seniority = seniorityPoints;
+	}
+	
+	public Long addSeniority(Long hoursWorked) {
+		return seniority += hoursWorked;
+	}
+	
+	public Long removeSeniority(Long hours) {
+		return seniority -= hours;
+	}
+	
+	public Boolean isFullTime() {
+		return type.isFullTime();
+	}
+	
+	public Boolean isPartTime() {
+		return type.isPartTime();
+	}
+	
+	public Boolean isCasual() {
+		return type.isCasual();
+	}
+	
+	public Boolean isType(EmployeeType type) {
+		return type.isType(type);
 	}
 	
 	// Builder
 	public abstract static class Builder<T extends Builder<T>>
      										extends User.Builder<T> {
 		protected EmployeeType type;
-		protected int 		   seniority;
+		protected Long 		   seniority;
 		protected ShiftEligibilityStrat elStrat;
 		
 		public T setType(EmployeeType type) {
 			this.type = type;
 			return self();
 		}
-		public T setSeniority(int seniority) {
+		public T setSeniority(Long seniority) {
 			this.seniority = seniority;
 			return self();
 		}

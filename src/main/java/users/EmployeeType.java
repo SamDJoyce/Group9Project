@@ -29,4 +29,20 @@ public enum EmployeeType {
 		}
 		return null;
 	}
+	
+	public Boolean isFullTime() {
+		return FULL_TIME.equals(this);
+	}
+	
+	public Boolean isPartTime() {
+		return PART_TIME.equals(this);
+	}
+	
+	public Boolean isCasual() {
+		return CASUAL.equals(this);
+	}
+	
+	public Boolean isType(EmployeeType type) {
+		return this.equals(type);
+	}
 }

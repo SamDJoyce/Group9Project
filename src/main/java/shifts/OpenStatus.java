@@ -4,27 +4,29 @@ import users.Employee;
 
 public class OpenStatus implements ShiftStatus {
 
+	private static final String CANNOT_COMPLETE = "Cannot complete an open shift.";
+	private static final String ASSIGNED  = "assigned";
+	private static final String CANCELLED = "cancelled";
+
 	public OpenStatus() {
-		// TODO Auto-generated constructor stub
+		// TODO Send notifications
 	}
 
 	@Override
 	public void assignEmployee(Shift shift, Employee employee) {
-		// TODO Auto-generated method stub
-		
+		shift.assignEmployee(employee);
+		shift.setStatus(ShiftStatusFactory.get(ASSIGNED));
+		// TODO Send notifications
 	}
 
 	@Override
 	public void cancel(Shift shift) {
-		// TODO Auto-generated method stub
-		
+		shift.setStatus(ShiftStatusFactory.get(CANCELLED));
 	}
 
 	@Override
 	public void complete(Shift shift) {
-		// TODO Auto-generated method stub
+		throw new IllegalStateException(CANNOT_COMPLETE);
 	}
-
-
 
 }

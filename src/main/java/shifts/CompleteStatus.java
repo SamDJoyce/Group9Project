@@ -4,26 +4,24 @@ import users.Employee;
 
 public class CompleteStatus implements ShiftStatus {
 
+	private static final String CANNOT_CHANGE = "Cannot change a completed shift.";
+
 	public CompleteStatus() {
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
 	public void assignEmployee(Shift shift, Employee employee) {
-		// TODO Auto-generated method stub
-		
+		throw new IllegalStateException(CANNOT_CHANGE);
 	}
 
 	@Override
 	public void cancel(Shift shift) {
-		// TODO Auto-generated method stub
-		
+		throw new IllegalStateException(CANNOT_CHANGE);
 	}
 
 	@Override
 	public void complete(Shift shift) {
-		// TODO Auto-generated method stub
-		
+		return;
 	}
 
 

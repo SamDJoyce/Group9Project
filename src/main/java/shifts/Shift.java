@@ -1,11 +1,21 @@
 package shifts;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 
 import users.Employee;
 
+/**
+ * Contains the logic for a single shift,
+ * including when it is, the employee 
+ * assigned, and current status.
+ * 
+ * @author Sam Joyce
+ */
 public class Shift {
 	
+	private static final String DURATION_EX = "Shift end must be later than shift start.";
+
 	public Shift() {
 	}
 	// Fields
@@ -29,6 +39,9 @@ public class Shift {
 	}
 
 	public void setStart(LocalDateTime start) {
+		if (end != null && end.isBefore(start)) {
+			throw new IllegalStateException(DURATION_EX);
+		} else 
 		this.start = start;
 	}
 
@@ -37,7 +50,19 @@ public class Shift {
 	}
 
 	public void setEnd(LocalDateTime end) {
-		this.end = end;
+		if (start != null && end.isBefore(start)) {
+			throw new IllegalStateException(DURATION_EX);
+		} else {
+			this.end = end;
+		}
+	}
+
+	public Duration getDuration() {
+		if (end.isBefore(start)) {
+			throw new IllegalStateException(DURATION_EX);
+		} else {
+			return Duration.between(start, end);
+		}
 	}
 
 	public ShiftStatus getStatus() {
@@ -52,7 +77,7 @@ public class Shift {
 		return employee;
 	}
 
-	public void setEmployee(Employee employee) {
+	public void assignEmployee(Employee employee) {
 		this.employee = employee;
 	}
 	
@@ -70,15 +95,19 @@ public class Shift {
 		public void setShiftId(int shiftId) {
 			this.shiftId = shiftId;
 		}
+		
 		public void setStart(LocalDateTime start) {
 			this.start = start;
 		}
+		
 		public void setEnd(LocalDateTime end) {
 			this.end = end;
 		}
+		
 		public void setStatus(ShiftStatus status) {
 			this.status = status;
 		}
+		
 		public void assignEmployee(Employee employee) {
 			this.employee = employee;
 		}

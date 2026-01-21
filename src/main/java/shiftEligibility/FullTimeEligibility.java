@@ -12,6 +12,8 @@ public class FullTimeEligibility implements ShiftEligibilityStrat {
 	@Override
 	public Boolean canSelectShift(Employee employee, Shift shift) {
 		// TODO Auto-generated method stub
+		// Must work 40 hours per week
+		// 8 hour shifts
 		return null;
 	}
 

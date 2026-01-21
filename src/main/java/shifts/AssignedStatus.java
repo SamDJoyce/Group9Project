@@ -1,29 +1,36 @@
 package shifts;
 
+import java.time.LocalDateTime;
+
 import users.Employee;
 
 public class AssignedStatus implements ShiftStatus {
 
+	private static final String EMPLOYEE_ALREADY_ASSIGNED = "An employee is already assigned to this shift.";
+	private static final String CANCELLED = "cancelled";
+	private static final String COMPLETED = "completed";
+	
 	public AssignedStatus() {
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
 	public void assignEmployee(Shift shift, Employee employee) {
-		// TODO Auto-generated method stub
-		
+		throw new IllegalStateException(EMPLOYEE_ALREADY_ASSIGNED);
 	}
 
 	@Override
 	public void cancel(Shift shift) {
-		// TODO Auto-generated method stub
-		
+		shift.setStatus(ShiftStatusFactory.get(CANCELLED));
+		shift.setEnd(LocalDateTime.now());
+		shift.getEmployee().addSeniority(shift.getDuration().toHours());
+		// TODO Send notification
 	}
 
 	@Override
 	public void complete(Shift shift) {
-		// TODO Auto-generated method stub
-		
+		shift.setStatus(ShiftStatusFactory.get(COMPLETED));
+		shift.getEmployee().addSeniority(shift.getDuration().toHours());
+		// TODO Send notification
 	}
 
 
