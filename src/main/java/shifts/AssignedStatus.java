@@ -4,6 +4,12 @@ import java.time.LocalDateTime;
 
 import users.Employee;
 
+/**
+ * Indicates a shift is in the 'Assigned' state.
+ * Contains methods for valid state changes.
+ * 
+ * @author Sam Joyce
+ */
 public class AssignedStatus implements ShiftStatus {
 
 	private static final String EMPLOYEE_ALREADY_ASSIGNED = "An employee is already assigned to this shift.";

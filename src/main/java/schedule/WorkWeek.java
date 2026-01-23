@@ -16,16 +16,22 @@ import java.util.Map;
  */
 
 public class WorkWeek {
-
+	
+	/**
+	 * The day of the week (Monday, Tuesday, etc.)
+	 * that will be week[0]
+	 */
+	private static DayOfWeek FIRST_DAY = DayOfWeek.MONDAY;
+	
 	private LocalDate weekStart; // Monday
 	private Map<LocalDate, WorkDay> week;
 	
 	public WorkWeek(LocalDate start) {
-		
 		// No matter what date is entered, it will be
-		// pushed back to the previous Monday.
+		// pushed back to the previous date corresponding
+		// to FIRST_DAY.
 		this.weekStart = start.with(
-						 TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
+						 TemporalAdjusters.previousOrSame(FIRST_DAY));
 		this.week = new LinkedHashMap<>();
 		// Add 7 days to the week
 		for (int i = 0; i < 7; i++) {

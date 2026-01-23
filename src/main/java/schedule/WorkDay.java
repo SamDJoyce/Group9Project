@@ -124,7 +124,8 @@ public class WorkDay {
 	}
 	
 	/**
-	 * Get the total hours worked for a single employee
+	 * Get the total hours worked for a single employee,
+	 * on a single day.
 	 * 
 	 * @param userId	employee's user ID
 	 * @return			duration of time worked on this day
@@ -140,12 +141,25 @@ public class WorkDay {
 		return hours;
 	}
 	
+	/**
+	 * @return	the total combined hours worked
+	 * 			for all employees on a given day.
+	 */
 	public Duration getTotalHoursWorked() {
 		Duration hours = Duration.ZERO;
 		for (Shift s : shifts) {
 			hours.plus(s.getDuration());
 		}
 		return hours;
+	}
+	
+	/**
+	 * @return 	the amount of time for which shifts 
+	 * 			must be scheduled for some minimum
+	 * 			number of employees.
+	 */
+	public Duration getHoursToCover() {
+		return Duration.between(openTime, closeTime);
 	}
 	
 	// Helper Methods
@@ -161,13 +175,14 @@ public class WorkDay {
 	private Boolean isDoubleBooked(Shift shift) {
 	    LocalDateTime start = shift.getStart();
 	    LocalDateTime end   = shift.getEnd();
-		if (shift.getEmployee() != null) {
+	    // Only check if an employee is assigned to the shift
+		if (shift.isAssigned()) {
+			// Check each existing shift
 	    	for (Shift existing : shifts) {
-	    		// Ignore unassigned shifts
-	            if (existing.getEmployee() == null) {
+	    		// Ignore existing unassigned shifts
+	            if (!existing.isAssigned()) {
 	                continue;
 	            }
-	            
 	            // Only examine shifts for the same employee
 	            if (!existing.getEmployee()
 	                         .equals(shift.getEmployee())) {
@@ -177,14 +192,8 @@ public class WorkDay {
 	            LocalDateTime existingStart = existing.getStart();
 	            LocalDateTime existingEnd   = existing.getEnd();
 				// Check if the already assigned shift overlaps with new shift
-	            boolean overlaps =
-	                    start.isBefore(existingEnd) &&
+	            return  start.isBefore(existingEnd) ||
 	                    end.isAfter(existingStart);
-
-	            if (overlaps) {
-	                return true;
-	            }
-	            return false;
 	    	}
 	    }
 		return false;

@@ -34,6 +34,9 @@ public class Shift {
 		this.shiftId = shiftId;
 	}
 
+	/**
+	 * @return time the shifts starts
+	 */
 	public LocalDateTime getStart() {
 		return start;
 	}
@@ -45,6 +48,9 @@ public class Shift {
 		this.start = start;
 	}
 
+	/**
+	 * @return the time the shifts ends
+	 */
 	public LocalDateTime getEnd() {
 		return end;
 	}
@@ -57,6 +63,10 @@ public class Shift {
 		}
 	}
 
+	/**
+	 * @return 	the duration of the shift, aka the amount
+	 * 			of time between start and end.
+	 */
 	public Duration getDuration() {
 		if (end.isBefore(start)) {
 			throw new IllegalStateException(DURATION_EX);
@@ -81,9 +91,20 @@ public class Shift {
 		this.employee = employee;
 	}
 	
+	/**
+	 * @return true if employee is not null
+	 */
+	public Boolean isAssigned() {
+		return employee != null;
+	}
+	
+	/**
+	 * Builder for Shift objects.
+	 */
 	public static class Builder {
 		
-		private static final String OPEN = "open";
+		private static final String OPEN 	 = "open";
+		private static final String ASSIGNED = "assigned";
 		
 		private int 		  shiftId;
 		private LocalDateTime start;
@@ -118,7 +139,9 @@ public class Shift {
 			s.shiftId  = shiftId;
 			s.start    = start;
 			s.end 	   = end;
-			s.status   = status != null ? status : ShiftStatusFactory.get(OPEN);
+			s.status   = status != null ? status : 
+						 employee != null ? ShiftStatusFactory.get(ASSIGNED) :
+						 ShiftStatusFactory.get(OPEN);
 			s.employee = employee;
 			
 			return s;
