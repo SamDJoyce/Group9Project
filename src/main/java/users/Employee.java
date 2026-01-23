@@ -8,12 +8,12 @@ import shiftEligibility.ShiftEligibilityStrat;
  * 
  * @author Sam Joyce
  */
-public abstract class Employee extends User {
+public class Employee extends User {
 
 	// Fields
 	protected EmployeeType type;
 	protected Long 		   seniority;
-	protected ShiftEligibilityStrat elStrat;
+	protected ShiftEligibilityStrat eligibility;
 	
 	// Constructors
 	protected Employee() {
@@ -61,27 +61,43 @@ public abstract class Employee extends User {
 	}
 	
 	// Builder
-	public abstract static class Builder<T extends Builder<T>>
-     										extends User.Builder<T> {
+	public static class Builder extends User.Builder<Builder> {
 		protected EmployeeType type;
 		protected Long 		   seniority;
-		protected ShiftEligibilityStrat elStrat;
+		protected ShiftEligibilityStrat eligibility;
 		
-		public T setType(EmployeeType type) {
+		public Builder setType(EmployeeType type) {
 			this.type = type;
 			return self();
 		}
-		public T setSeniority(Long seniority) {
+		public Builder setSeniority(Long seniority) {
 			this.seniority = seniority;
 			return self();
 		}
-		public T setElStrat(ShiftEligibilityStrat elStrat) {
-			this.elStrat = elStrat;
+		public Builder setEligibility(ShiftEligibilityStrat eligibility) {
+			this.eligibility = eligibility;
 			return self();
 		}
 		
+		@Override
+		public Employee build() {
+			Employee e = new Employee();
+			e.userId	  = userId;
+			e.firstName	  = firstName;
+			e.lastName    = lastName;
+			e.email 	  = email;
+			e.type        = type;
+			e.seniority   = seniority;
+			e.eligibility = eligibility;
+			return e;
+		}
 		
+		@Override
+		protected Builder self() {
+			return this;
+		}
 		
 	}
+		
 
 }

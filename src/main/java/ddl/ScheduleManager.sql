@@ -6,7 +6,8 @@ USE ScheduleManager;
 -- Employee
 CREATE TABLE employees (
 	userId		int			NOT NULL UNIQUE AUTO_INCREMENT,
-	name		varchar(50)	NOT NULL,
+	firstName	varchar(50)	NOT NULL,
+    lastName	varchar(50)	NOT NULL,
 	email		varchar(50) NOT NULL,
 	type		varchar(20)	NOT NULL,
 	seniority	int			NULL,

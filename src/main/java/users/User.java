@@ -13,7 +13,8 @@ public abstract class User {
 	
 	// Fields
 	protected int 	 userId;
-	protected String name;
+	protected String firstName;
+	protected String lastName;
 	protected String email;
 	
 	// Methods
@@ -34,14 +35,22 @@ public abstract class User {
 		this.userId = userId;
 	}
 	
-	public String getName() {
-		return name;
+	public String getFirstName() {
+		return firstName;
 	}
-	
-	public void setName(String name) {
-		this.name = name;
+
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
 	}
-	
+
+	public String getLastName() {
+		return lastName;
+	}
+
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+
 	public String getEmail() {
 		return email;
 	}
@@ -53,7 +62,8 @@ public abstract class User {
 	// Builder
 	public static abstract class Builder<T extends Builder<T>> {
 		protected int 	 userId;
-		protected String name;
+		protected String firstName;
+		protected String lastName;
 		protected String email;
 		
 		// Type agnostic Setters
@@ -63,8 +73,13 @@ public abstract class User {
 			return self();
 		}
 		
-		public T setName(String name) {
-			this.name = name;
+		public T setFirstName(String firstName) {
+			this.firstName = firstName;
+			return self();
+		}
+		
+		public T setLastName(String lastName) {
+			this.lastName = lastName;
 			return self();
 		}
 		

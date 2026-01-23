@@ -12,7 +12,7 @@ public class ShiftStatusFactory {
 	private static final String ASSIGNED  = "assigned";
 	private static final String OPEN 	  = "open";
 
-	public ShiftStatusFactory() {
+	private ShiftStatusFactory() {
 	}
 
 	/**
