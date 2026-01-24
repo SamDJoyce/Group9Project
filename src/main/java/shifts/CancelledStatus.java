@@ -6,7 +6,8 @@ public class CancelledStatus implements ShiftStatus {
 
 	private static final String CANNOT_COMPLETE = "Cannot complete a cancelled shift.";
 	private static final String CANNOT_ASSIGN = "Cannot assign an employee to a cancelled shift.";
-
+	private static final String CANCELLED = "cancelled";
+	
 	public CancelledStatus() {
 	}
 
@@ -24,6 +25,9 @@ public class CancelledStatus implements ShiftStatus {
 	public void complete(Shift shift) {
 		throw new IllegalStateException(CANNOT_COMPLETE);
 	}
-
+	@Override
+	public String toString() {
+		return CANCELLED;
+	}
 
 }

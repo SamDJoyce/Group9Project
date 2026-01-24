@@ -16,6 +16,7 @@ public abstract class User {
 	protected String firstName;
 	protected String lastName;
 	protected String email;
+	protected String passHash;
 	
 	// Methods
 	
@@ -59,12 +60,21 @@ public abstract class User {
 		this.email = email;
 	}
 	
+	public String getPassHash() {
+		return passHash;
+	}
+
+	public void setPassHash(String passHash) {
+		this.passHash = passHash;
+	}
+
 	// Builder
 	public static abstract class Builder<T extends Builder<T>> {
 		protected int 	 userId;
 		protected String firstName;
 		protected String lastName;
 		protected String email;
+		protected String passHash;
 		
 		// Type agnostic Setters
 
@@ -85,6 +95,11 @@ public abstract class User {
 		
 		public T setEmail(String email) {
 			this.email = email;
+			return self();
+		}
+		
+		public T setPassHass(String passHash) {
+			this.passHash = passHash;
 			return self();
 		}
 		

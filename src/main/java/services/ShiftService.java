@@ -51,12 +51,32 @@ public interface ShiftService {
 	
 	/**
 	 * @param date	the desired date.
-	 * @return		a list of all shifts on that day.
+	 * @return		a list of all shifts on the chosen day.
 	 */
 	List<Shift> getShiftsByDay(LocalDate date);
 	
-	// TODO get employee's shifts for the day
-	// TODO get employee's shifts for the week
+	/**
+	 * @param date		the date of the shifts to be retrieved
+	 * @param employee	the employee whose shifts are to be retrieved
+	 * @return			a list of the given employee's shifts
+	 * 					on the chosen day.
+	 */
+	List<Shift> getShiftsByDay(LocalDate date, Employee employee);
+	
+	/**
+	 * @param weekOf	a date within the desired workWeek
+	 * @return			a list of all shifts schedule for the
+	 * 					chosen week.
+	 */
+	List<Shift> getShiftsByWeek(LocalDate weekOf);
+	
+	/**
+	 * @param weekOf	a date within the desired work week
+	 * @param employee	the employee whose shifts are to be retrieved
+	 * @return			all of th given employee's shifts for the
+	 * 					selected work week.
+	 */
+	List<Shift> getShiftsByWeek(LocalDate weekOf, Employee employee);
 	
 	/**
 	 * @param shift object containing new shift information

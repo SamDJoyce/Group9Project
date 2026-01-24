@@ -28,10 +28,10 @@ public class WorkWeek {
 	
 	public WorkWeek(LocalDate start) {
 		// No matter what date is entered, it will be
-		// pushed back to the previous date corresponding
-		// to FIRST_DAY.
+		// pushed back to the previous day corresponding
+		// to FIRST_DAY (Monday, Tuesday, Wednesday, etc.).
 		this.weekStart = start.with(
-						 TemporalAdjusters.previousOrSame(FIRST_DAY));
+						 TemporalAdjusters.previousOrSame(FIRST_DAY) );
 		this.week = new LinkedHashMap<>();
 		// Add 7 days to the week
 		for (int i = 0; i < 7; i++) {
@@ -41,17 +41,17 @@ public class WorkWeek {
 	}
 	
     /**
-     * Sums an Employee's hours worked for a given 7 day period.
+     * Sums an Employee's time worked for a given 7 day period.
      * 
      * @param userId	id of Employee whose work hours are being retrieved
-     * @return			total hours worked during this 7 day period
+     * @return			total time worked during this 7 day period
      */
-    public Duration getTotalHoursWorked(int userId) {
-        Duration totalHours = Duration.ZERO;
+    public Duration getTotalTimeWorked(int userId) {
+        Duration totalTime = Duration.ZERO;
     	for (WorkDay day : week.values()) {
-        	totalHours = totalHours.plus(day.getHoursWorked(userId));
+        	totalTime = totalTime.plus(day.getTimeWorked(userId));
         }
-    	return totalHours;
+    	return totalTime;
     }
     
     /**
@@ -60,10 +60,10 @@ public class WorkWeek {
      * 
      * @return	sum of hours worked by all employees
      */
-    public Duration getTotalHoursWorked() {
+    public Duration getTotalTimeWorked() {
     	Duration totalHours = Duration.ZERO;
     	for (WorkDay day : week.values()) {
-        	totalHours = totalHours.plus(day.getTotalHoursWorked());
+        	totalHours = totalHours.plus(day.getTotalTimeWorked());
         }
     	return totalHours;
     }

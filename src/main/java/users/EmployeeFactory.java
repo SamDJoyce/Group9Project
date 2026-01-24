@@ -11,10 +11,6 @@ import shiftEligibility.*;
  */
 public class EmployeeFactory {
 
-	private static final String CASUAL    = "casual";
-	private static final String PART_TIME = "parttime";
-	private static final String FULL_TIME = "fulltime";
-
 	private EmployeeFactory() {
 	}
 	
@@ -26,7 +22,7 @@ public class EmployeeFactory {
 	 * @param email		The employee's email address
 	 * @param type		Whether the employee is Full time,
 	 * 					Part time, Casual
-	 * @param seniority Total lifetime hours worked
+	 * @param seniority Total time worked, in minutes
 	 * @return			An employee object.
 	 */
 	public static Employee get(	int    userId,
@@ -34,42 +30,20 @@ public class EmployeeFactory {
 								String lastName,
 								String email,
 								String type,
-								Long   seniority
+								int	   seniority,
+								String passHash
 								) {
-		if (FULL_TIME.equalsIgnoreCase(type)) {
+
 			return new Employee.Builder()
 							   .setUserId(userId)
 							   .setFirstName(firstName)
 							   .setLastName(lastName)
 							   .setEmail(email)
-							   .setType(EmployeeType.FULL_TIME)
+							   .setType(EmployeeType.fromString(type))
 							   .setSeniority(seniority)
-							   .setEligibility(new FullTimeEligibility())
+							   .setEligibility(EligFactory.get(type))
+							   .setPassHass(passHash)
 							   .build();
-		}
-		if (PART_TIME.equalsIgnoreCase(type)) {
-			return new Employee.Builder()
-					 		   .setUserId(userId)
-							   .setFirstName(firstName)
-							   .setLastName(lastName)
-			 				   .setEmail(email)
-			 				   .setType(EmployeeType.PART_TIME)
-			 				   .setSeniority(seniority)
-							   .setEligibility(new PartTimeEligibility())
-			 				   .build();
-		}
-		if (CASUAL.equalsIgnoreCase(type)) {
-			return new Employee.Builder()
-							   .setUserId(userId)
-							   .setFirstName(firstName)
-							   .setLastName(lastName)
-							   .setEmail(email)
-							   .setType(EmployeeType.CASUAL)
-							   .setSeniority(seniority)
-							   .setEligibility(new CasualEligibility())
-							   .build();
-		}
-		return null;
 	}
 	
 
@@ -85,41 +59,17 @@ public class EmployeeFactory {
 	public static Employee get(	String firstName,
 								String lastName,
 								String email,
-								String type
+								String type,
+								String passHash
 								) {
-		if (FULL_TIME.equalsIgnoreCase(type)) {
 			return new Employee.Builder()
 					   		   .setFirstName(firstName)
 					   		   .setLastName(lastName)
 							   .setEmail(email)
-							   .setType(EmployeeType.FULL_TIME)
-							   .setSeniority(0L)
-							   .setEligibility(new FullTimeEligibility())
+							   .setType(EmployeeType.fromString(type))
+							   .setSeniority(0)
+							   .setEligibility(EligFactory.get(type))
+							   .setPassHass(passHash)
 							   .build();
-		}
-		if (PART_TIME.equalsIgnoreCase(type)) {
-			return new Employee.Builder()
-					   		   .setFirstName(firstName)
-					   		   .setLastName(lastName)
-			 				   .setEmail(email)
-			 				   .setType(EmployeeType.PART_TIME)
-			 				   .setSeniority(0L)
-							   .setEligibility(new PartTimeEligibility())
-			 				   .build();
-		}
-		if (CASUAL.equalsIgnoreCase(type)) {
-			return new Employee.Builder()
-					   		   .setFirstName(firstName)
-					   		   .setLastName(lastName)
-							   .setEmail(email)
-							   .setType(EmployeeType.CASUAL)
-							   .setSeniority(0L)
-							   .setEligibility(new CasualEligibility())
-							   .build();
-		}
-		return null;
 	}
-
-	
-
 }

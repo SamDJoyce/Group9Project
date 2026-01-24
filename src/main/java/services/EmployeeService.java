@@ -19,9 +19,11 @@ public interface EmployeeService {
 	 * @param type	employee type (FullTime, PartTime, Casual)
 	 * @return		the new Employee object
 	 */
-	Employee createEmployee( String name,
+	Employee createEmployee( String firstName,
+							 String lastName,
 							 String email,
-							 String type);
+							 String type,
+							 String passHash);
 	
 	/**
 	 * Retrieves an Employee from the DB

@@ -5,6 +5,7 @@ import users.Employee;
 public class CompleteStatus implements ShiftStatus {
 
 	private static final String CANNOT_CHANGE = "Cannot change a completed shift.";
+	private static final String COMPLETE = "complete";
 
 	public CompleteStatus() {
 	}
@@ -24,6 +25,9 @@ public class CompleteStatus implements ShiftStatus {
 		return;
 	}
 
-
+	@Override
+	public String toString() {
+		return COMPLETE;
+	}
 
 }

@@ -1,7 +1,7 @@
 -- Create database
-CREATE DATABASE ScheduleManager;
+CREATE DATABASE ShiftManager;
 
-USE ScheduleManager;
+USE ShiftManager;
 
 -- Employee
 CREATE TABLE employees (
@@ -10,7 +10,8 @@ CREATE TABLE employees (
     lastName	varchar(50)	NOT NULL,
 	email		varchar(50) NOT NULL,
 	type		varchar(20)	NOT NULL,
-	seniority	int			NULL,
+	seniority	int,
+	passHash	varchar(255),
 	CONSTRAINT employees_PK PRIMARY KEY (userId)
 );
 
@@ -19,6 +20,7 @@ CREATE TABLE shifts (
 	shiftId		int			NOT NULL UNIQUE AUTO_INCREMENT,
 	start		timestamp	NOT NULL,
 	end			timestamp	NOT NULL,
+	status		varchar(12) NOT NULL,
 	employeeId	int			NULL,
 	CONSTRAINT shifts_PK PRIMARY KEY (shiftId),
 	CONSTRAINT employee_FK FOREIGN KEY (employeeId) REFERENCES employees (userId)

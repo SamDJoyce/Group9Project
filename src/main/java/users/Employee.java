@@ -12,7 +12,10 @@ public class Employee extends User {
 
 	// Fields
 	protected EmployeeType type;
-	protected Long 		   seniority;
+	/**
+	 * Stored as minutes for precision
+	 */
+	protected int 		   seniority;
 	protected ShiftEligibilityStrat eligibility;
 	
 	// Constructors
@@ -28,20 +31,28 @@ public class Employee extends User {
 		this.type = type;
 	}
 
-	public Long getSeniority() {
+	public int getSeniority() {
 		return seniority;
 	}
 
-	public void setSeniority(Long seniorityPoints) {
-		this.seniority = seniorityPoints;
+	/**
+	 * @param seniority employee's total time worked, in minutes
+	 */
+	public void setSeniority(int seniority) {
+		this.seniority = seniority;
 	}
 	
-	public Long addSeniority(Long hoursWorked) {
-		return seniority += hoursWorked;
+	/**
+	 * @param 	TimeWorked adds time worked to an employee's total.
+	 * 			Stored in minutes
+	 * @return	new total seniority
+	 */
+	public int addSeniority(int timeWorked) {
+		return seniority += timeWorked;
 	}
 	
-	public Long removeSeniority(Long hours) {
-		return seniority -= hours;
+	public int removeSeniority(int time) {
+		return seniority -= time;
 	}
 	
 	public Boolean isFullTime() {
@@ -63,14 +74,14 @@ public class Employee extends User {
 	// Builder
 	public static class Builder extends User.Builder<Builder> {
 		protected EmployeeType type;
-		protected Long 		   seniority;
+		protected int 		   seniority;
 		protected ShiftEligibilityStrat eligibility;
 		
 		public Builder setType(EmployeeType type) {
 			this.type = type;
 			return self();
 		}
-		public Builder setSeniority(Long seniority) {
+		public Builder setSeniority(int seniority) {
 			this.seniority = seniority;
 			return self();
 		}
@@ -89,6 +100,7 @@ public class Employee extends User {
 			e.type        = type;
 			e.seniority   = seniority;
 			e.eligibility = eligibility;
+			e.passHash	  = passHash;
 			return e;
 		}
 		

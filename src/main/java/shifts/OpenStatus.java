@@ -4,6 +4,7 @@ import users.Employee;
 
 public class OpenStatus implements ShiftStatus {
 
+	private static final String OPEN = "open";
 	private static final String CANNOT_COMPLETE = "Cannot complete an open shift.";
 	private static final String ASSIGNED  = "assigned";
 	private static final String CANCELLED = "cancelled";
@@ -27,6 +28,11 @@ public class OpenStatus implements ShiftStatus {
 	@Override
 	public void complete(Shift shift) {
 		throw new IllegalStateException(CANNOT_COMPLETE);
+	}
+	
+	@Override
+	public String toString() {
+		return OPEN;
 	}
 
 }

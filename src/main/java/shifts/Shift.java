@@ -113,24 +113,29 @@ public class Shift {
 		private Employee	  employee;
 		
 		
-		public void setShiftId(int shiftId) {
+		public Builder setShiftId(int shiftId) {
 			this.shiftId = shiftId;
+			return this;
 		}
 		
-		public void setStart(LocalDateTime start) {
+		public Builder setStart(LocalDateTime start) {
 			this.start = start;
+			return this;
 		}
 		
-		public void setEnd(LocalDateTime end) {
+		public Builder setEnd(LocalDateTime end) {
 			this.end = end;
+			return this;
 		}
 		
-		public void setStatus(ShiftStatus status) {
+		public Builder setStatus(ShiftStatus status) {
 			this.status = status;
+			return this;
 		}
 		
-		public void assignEmployee(Employee employee) {
+		public Builder assignEmployee(Employee employee) {
 			this.employee = employee;
+			return this;
 		}
 		
 		public Shift build() {

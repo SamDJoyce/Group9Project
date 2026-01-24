@@ -22,25 +22,25 @@ public class WorkDay {
 	
 	private static final String SHIFT_OVERLAPS = "New shift overlaps with an existing shift for this employee";
 	private LocalDate     date;
-	private LocalDateTime openTime;
-	private LocalDateTime closeTime;
+	private LocalDateTime start;
+	private LocalDateTime end;
 	private List<Shift>   shifts;
 	
 	// Constructor
 	
 	public WorkDay(	LocalDate     date,
-					LocalDateTime openTime,
-					LocalDateTime closeTime) {
+					LocalDateTime start,
+					LocalDateTime end) {
 		this.date 	   = date;
-		this.openTime  = openTime;
-		this.closeTime = closeTime;
+		this.start     = start;
+		this.end 	   = end;
 		this.shifts	   = new ArrayList<Shift>();
 	}
 	
 	public WorkDay(LocalDate date) {
 		this.date 	   = date;
-		this.openTime  = null;
-		this.closeTime = null;
+		this.start  = null;
+		this.end = null;
 		this.shifts	   = new ArrayList<Shift>();
 	}
 	
@@ -54,20 +54,28 @@ public class WorkDay {
 		this.date = date;
 	}
 
-	public LocalDateTime getOpenTime() {
-		return openTime;
+	public LocalDateTime getDayStart() {
+		return start;
 	}
 
-	public void setOpenTime(LocalDateTime openTime) {
-		this.openTime = openTime;
+	public void setDayStart(LocalDateTime start) {
+		if(isToday(start)) {
+			this.start = start;
+		} else {
+			throw new IllegalStateException("Day start date must match Workday date");
+		}
 	}
 
-	public LocalDateTime getCloseTime() {
-		return closeTime;
+	public LocalDateTime getDayEnd() {
+		return end;
 	}
 
-	public void setCloseTime(LocalDateTime closeTime) {
-		this.closeTime = closeTime;
+	public void setDayEnd(LocalDateTime end) {
+		if (isToday(end)) {
+			this.end = end;
+		} else {
+			throw new IllegalStateException("Day end date must match Workday date");
+		}
 	}
 
 	public List<Shift> getShifts() {
@@ -96,8 +104,8 @@ public class WorkDay {
 	    if (end.isBefore(start) || end.isEqual(start)) {
 	        return false;
 	    }
-	    // Validate shift is within working hours
-	    if (start.isBefore(openTime) || end.isAfter(closeTime)) {
+	    // Validate shift is within possible working hours
+	    if (start.isBefore(this.start) || end.isAfter(this.end)) {
 	        return false;
 	    }
 	    // Validate shift is on this day
@@ -109,6 +117,10 @@ public class WorkDay {
 	    	 return false;
 	     }
 	    return true;
+	}
+	
+	public Boolean isToday(LocalDateTime time) {
+		return date.equals(time.toLocalDate());
 	}
 	
 	/**
@@ -131,7 +143,7 @@ public class WorkDay {
 	 * @return			duration of time worked on this day
 	 * 					(across one or more shifts)
 	 */
-	public Duration getHoursWorked(int userId) {
+	public Duration getTimeWorked(int userId) {
 		Duration hours = Duration.ZERO;
 		for (Shift s : shifts) {
 			if (s.getEmployee().getUserId() == userId) {
@@ -145,7 +157,7 @@ public class WorkDay {
 	 * @return	the total combined hours worked
 	 * 			for all employees on a given day.
 	 */
-	public Duration getTotalHoursWorked() {
+	public Duration getTotalTimeWorked() {
 		Duration hours = Duration.ZERO;
 		for (Shift s : shifts) {
 			hours.plus(s.getDuration());
@@ -158,8 +170,8 @@ public class WorkDay {
 	 * 			must be scheduled for some minimum
 	 * 			number of employees.
 	 */
-	public Duration getHoursToCover() {
-		return Duration.between(openTime, closeTime);
+	public Duration getTimeToCover() {
+		return Duration.between(start, end);
 	}
 	
 	// Helper Methods
