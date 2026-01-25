@@ -147,7 +147,7 @@ public class WorkDay {
 		Duration hours = Duration.ZERO;
 		for (Shift s : shifts) {
 			if (s.getEmployee().getUserId() == userId) {
-				hours.plus(s.getDuration());
+				hours = hours.plus(s.getDuration());
 			}
 		}
 		return hours;
@@ -160,7 +160,7 @@ public class WorkDay {
 	public Duration getTotalTimeWorked() {
 		Duration hours = Duration.ZERO;
 		for (Shift s : shifts) {
-			hours.plus(s.getDuration());
+			hours = hours.plus(s.getDuration());
 		}
 		return hours;
 	}
@@ -204,7 +204,7 @@ public class WorkDay {
 	            LocalDateTime existingStart = existing.getStart();
 	            LocalDateTime existingEnd   = existing.getEnd();
 				// Check if the already assigned shift overlaps with new shift
-	            return  start.isBefore(existingEnd) ||
+	            return  start.isBefore(existingEnd) &&
 	                    end.isAfter(existingStart);
 	    	}
 	    }
