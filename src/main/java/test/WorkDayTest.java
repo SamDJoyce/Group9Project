@@ -42,7 +42,7 @@ class WorkDayTest {
         empl2 = EmployeeFactory.get(
 				        		2, 
 				        		"Smash", 
-				        		"Testman", 
+				        		"Testman",
 				        		"sTestman@tests.net", 
 				        		"partTime", 
 				        		0, 
@@ -88,47 +88,52 @@ class WorkDayTest {
     
     @Test
     void overlappingShiftForDifferentEmployeesAreAllowed() {
-    	
-    }
-    
-    @Test
-    void shiftWithEndBeforeStartIsInvalid() {
-        Shift shift = new Shift.Builder()
-				   .setShiftId(1)
-				   .setStart(date.atTime(13, 0))
-				   .setEnd(date.atTime(9, 0))
-				   .build();
-        assertFalse(workDay.isValid(shift));
-    }
-    
-    @Test
-    void shiftOutsideWorkingHoursIsInvalid() {
-        Shift shift = new Shift.Builder()
-				   .setShiftId(1)
-				   .setStart(date.atTime(1, 0))
-				   .setEnd(date.atTime(5, 0))
-				   .build();
-        assertFalse(workDay.isValid(shift));
-    }
-    
-    @Test
-    void shiftOnDifferentDateIsInvalid() {
     	Shift first = new Shift.Builder()
 					   .setShiftId(1)
 					   .setStart(date.atTime(10, 0))
 					   .setEnd(date.atTime(14, 0))
 					   .assignEmployee(empl)
 					   .build();
-    	Shift second = new Shift.Builder()
+		Shift second = new Shift.Builder()
 					   .setShiftId(2)
 					   .setStart(date.atTime(10, 0))
 					   .setEnd(date.atTime(14, 0))
 					   .assignEmployee(empl2)
 					   .build();
-     	workDay.addShift(first);
-     	workDay.addShift(second);
-     	
-     	assertEquals(2, workDay.getShifts().size());
+		workDay.addShift(first);
+		workDay.addShift(second);
+		
+		assertEquals(2, workDay.getShifts().size());
+    }
+    
+    @Test
+    void shiftWithEndBeforeStartIsInvalid() {
+        Shift shift = new Shift.Builder()
+					   .setShiftId(1)
+					   .setStart(date.atTime(13, 0))
+					   .setEnd(date.atTime(9, 0))
+					   .build();
+        assertFalse(workDay.isValid(shift));
+    }
+    
+    @Test
+    void shiftOutsideWorkingHoursIsInvalid() {
+        Shift shift = new Shift.Builder()
+					   .setShiftId(1)
+					   .setStart(date.atTime(1, 0))
+					   .setEnd(date.atTime(5, 0))
+					   .build();
+        assertFalse(workDay.isValid(shift));
+    }
+    
+    @Test
+    void shiftOnDifferentDateIsInvalid() {
+    	Shift shift = new Shift.Builder()
+					   .setShiftId(1)
+					   .setStart(date.plusDays(1).atTime(1, 0))
+					   .setEnd(date.plusDays(1).atTime(5, 0))
+					   .build();
+    	assertFalse(workDay.isValid(shift));
     }
     
     @Test
@@ -147,7 +152,7 @@ class WorkDayTest {
 		workDay.addShift(first);
 		workDay.addShift(second);
 	
-	assertEquals(2, workDay.getShifts().size());
+		assertEquals(2, workDay.getShifts().size());
     }
     
     @Test
@@ -172,7 +177,7 @@ class WorkDayTest {
     }
     
     @Test
-    void shouldSumTimeWorkedFor() {
+    void shouldSumTimeWorkedForAllEmployees() {
     	Shift first = new Shift.Builder()
 					   .setShiftId(1)
 					   .setStart(date.atTime(9, 0))

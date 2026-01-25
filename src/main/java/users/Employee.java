@@ -7,7 +7,7 @@ import shiftEligibility.ShiftEligibilityStrat;
  * employee types: Full Time, Part Time, and Casual
  * 
  * @author Sam Joyce
- */
+ */ 
 public class Employee extends User {
 
 	// Fields
@@ -15,7 +15,7 @@ public class Employee extends User {
 	/**
 	 * Stored as minutes for precision
 	 */
-	protected int 		   seniority;
+	protected int seniority;
 	protected ShiftEligibilityStrat eligibility;
 	
 	// Constructors

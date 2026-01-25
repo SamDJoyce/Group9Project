@@ -160,7 +160,9 @@ public class WorkDay {
 	public Duration getTotalTimeWorked() {
 		Duration hours = Duration.ZERO;
 		for (Shift s : shifts) {
-			hours = hours.plus(s.getDuration());
+			if (s.isAssigned()) {
+				hours = hours.plus(s.getDuration());
+			}
 		}
 		return hours;
 	}

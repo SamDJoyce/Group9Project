@@ -10,19 +10,19 @@ import java.util.Map;
 /**
  * Aggregates information across the week,
  * such as total hours worked, and therefore
- * pay. Contains exactly 7 WorkDays
+ * pay. Contains exactly 7 WorkDays.
  * 
  * @author Sam Joyce
  */
 
 public class WorkWeek {
 	
-	/**
+	/** 
 	 * The day of the week (Monday, Tuesday, etc.)
 	 * that will be week[0]
 	 */
 	private static DayOfWeek FIRST_DAY = DayOfWeek.MONDAY;
-	
+
 	private LocalDate weekStart; // Monday
 	private Map<LocalDate, WorkDay> week;
 	
@@ -38,6 +38,14 @@ public class WorkWeek {
 			LocalDate date = weekStart.plusDays(i);
 			week.put(date, new WorkDay(date));
 		}
+	}
+	
+	public LocalDate getWeekStart() {
+		return weekStart;
+	}
+
+	public Map<LocalDate, WorkDay> getWeek() {
+		return week;
 	}
 	
     /**
@@ -61,11 +69,11 @@ public class WorkWeek {
      * @return	sum of hours worked by all employees
      */
     public Duration getTotalTimeWorked() {
-    	Duration totalHours = Duration.ZERO;
+    	Duration totalTime = Duration.ZERO;
     	for (WorkDay day : week.values()) {
-        	totalHours = totalHours.plus(day.getTotalTimeWorked());
+        	totalTime = totalTime.plus(day.getTotalTimeWorked());
         }
-    	return totalHours;
+    	return totalTime;
     }
 
 }
