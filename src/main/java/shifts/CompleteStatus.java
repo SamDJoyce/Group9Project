@@ -24,6 +24,11 @@ public class CompleteStatus implements ShiftStatus {
 	public void complete(Shift shift) {
 		return;
 	}
+	
+	@Override
+	public void open(Shift shift) {
+		throw new IllegalStateException(CANNOT_CHANGE);
+	}
 
 	@Override
 	public String toString() {

@@ -43,8 +43,8 @@ public class EmployeeDAO implements EmployeeService {
 		Employee empl = EmployeeFactory.get(firstName, lastName, email, type, passHash);
 		
 		String insertNewEmployee = "INSERT INTO " + employeesTable + " ("
-				+ "firstName, lastName, email, type, seniority) "
-				+ "VALUES (?,?,?,?,0)";
+				+ "firstName, lastName, email, type, seniority, passHash) "
+				+ "VALUES (?,?,?,?,0,?)";
 		
 		Connection 		  connection    = null;
 		PreparedStatement statement     = null;
@@ -58,6 +58,7 @@ public class EmployeeDAO implements EmployeeService {
 			statement.setString(2, lastName);
 			statement.setString(3, email);
 			statement.setString(4, type);
+			statement.setString(5, passHash);
 			
 			statement.executeUpdate();
 			generatedKeys = statement.getGeneratedKeys();
@@ -98,6 +99,46 @@ public class EmployeeDAO implements EmployeeService {
 			connection = DBConnection.getInstance().getConnection();
 			statement  = connection.prepareStatement(getUser);
 			statement.setInt(1, userId);
+			resSet = statement.executeQuery();
+			if (resSet.next()) {
+				empl = EmployeeFactory.get(	resSet.getInt	("userId"), 
+											resSet.getString("firstName"), 
+											resSet.getString("lastName"), 
+											resSet.getString("email"),
+											resSet.getString("type"),
+											resSet.getInt   ("seniority"),
+											resSet.getString("passHash")
+											);
+			}
+		} catch(SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (resSet!=null) {
+					resSet.close();
+				}
+				if (statement!=null) {
+					statement.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return empl;
+	}
+	
+	@Override
+	public Employee getEmployeeByEmail(String email) {
+		Employee empl = null;
+		Connection connection = null;
+		PreparedStatement statement = null;
+		ResultSet resSet = null;
+		String getUser = "SELECT * FROM " + employeesTable + " WHERE email = ?";
+		
+		try {
+			connection = DBConnection.getInstance().getConnection();
+			statement  = connection.prepareStatement(getUser);
+			statement.setString(1, email);
 			resSet = statement.executeQuery();
 			if (resSet.next()) {
 				empl = EmployeeFactory.get(	resSet.getInt	("userId"), 

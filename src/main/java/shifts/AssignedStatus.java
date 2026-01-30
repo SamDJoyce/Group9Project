@@ -16,6 +16,7 @@ public class AssignedStatus implements ShiftStatus {
 	private static final String CANCELLED = "cancelled";
 	private static final String COMPLETED = "completed";
 	private static final String ASSIGNED  = "assigned";
+	private static final String OPEN	  = "open";
 	
 	public AssignedStatus() {
 	}
@@ -27,17 +28,33 @@ public class AssignedStatus implements ShiftStatus {
 
 	@Override
 	public void cancel(Shift shift) {
+		LocalDateTime time = LocalDateTime.now();
 		shift.setStatus(ShiftStatusFactory.get(CANCELLED));
-		shift.setEnd(LocalDateTime.now());
-		shift.getEmployee().addSeniority(Math.toIntExact(shift.getDuration().toMinutes()));
-		// TODO Send notification
+		
+		if (shift.isAssigned() && time.isAfter(shift.getStart())) {
+			shift.setEnd(time);
+			shift.getEmployee().addSeniority(Math.toIntExact(shift.getDuration().toMinutes()));
+			// TODO Send notification
+		}
 	}
 
 	@Override
 	public void complete(Shift shift) {
 		shift.setStatus(ShiftStatusFactory.get(COMPLETED));
-		shift.getEmployee().addSeniority(Math.toIntExact(shift.getDuration().toMinutes()));
-		// TODO Send notification
+		LocalDateTime time = LocalDateTime.now();
+		
+		if (shift.isAssigned() && time.isAfter(shift.getStart())) {
+			shift.getEmployee().addSeniority(Math.toIntExact(shift.getDuration().toMinutes()));
+			// TODO Send notification
+		}
+	}
+	
+	@Override
+	public void open(Shift shift) {
+		shift.clearEmployee();
+		shift.setStatus(ShiftStatusFactory.get(OPEN));
+		// TODO send notification to cleared employee
+		// TODO send notification to newly assigned employee
 	}
 
 	@Override

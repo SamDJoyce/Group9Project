@@ -71,6 +71,10 @@ public class Employee extends User {
 		return type.isType(type);
 	}
 	
+	public Boolean isSupervisor() {
+		return false;
+	}
+	
 	// Builder
 	public static class Builder extends User.Builder<Builder> {
 		protected EmployeeType type;

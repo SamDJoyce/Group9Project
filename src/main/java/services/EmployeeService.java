@@ -35,6 +35,15 @@ public interface EmployeeService {
 	Employee getEmployee(int userId);
 	
 	/**
+	 * Retrieves an Employee from the DB
+	 * then construct and return the object.
+	 * 
+	 * @param email		Employee's email address
+	 * @return			the Employee object
+	 */
+	Employee getEmployeeByEmail(String email);
+	
+	/**
 	 * @param userId	Employee's userId
 	 */
 	void deleteEmployee(int userId);

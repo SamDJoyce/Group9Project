@@ -14,7 +14,7 @@ import users.Employee;
  */
 public class Shift {
 	
-	private static final String DURATION_EX = "Shift end must be later than shift start.";
+	private static final String DURATION_EX = "Shift end must be after shift start.";
 
 	public Shift() {
 	}
@@ -87,8 +87,18 @@ public class Shift {
 		return employee;
 	}
 
+	/**
+	 * @param employee the person assigned to work this shift
+	 */
 	public void assignEmployee(Employee employee) {
 		this.employee = employee;
+	}
+	
+	/**
+	 * Set assigned employee to null.
+	 */
+	public void clearEmployee() {
+		this.employee = null;
 	}
 	
 	/**

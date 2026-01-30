@@ -31,6 +31,11 @@ public class OpenStatus implements ShiftStatus {
 	}
 	
 	@Override
+	public void open(Shift shift) {
+		return; // Already OPEN so do nothing
+	}
+	
+	@Override
 	public String toString() {
 		return OPEN;
 	}

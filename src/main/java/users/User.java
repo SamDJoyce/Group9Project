@@ -18,6 +18,9 @@ public abstract class User {
 	protected String email;
 	protected String passHash;
 	
+	// Abstract Methods
+	public abstract Boolean isSupervisor();
+	
 	// Methods
 	
 	public void login() {
@@ -46,6 +49,10 @@ public abstract class User {
 
 	public String getLastName() {
 		return lastName;
+	}
+	
+	public String getFullName() {
+		return firstName + " " + lastName;
 	}
 
 	public void setLastName(String lastName) {
