@@ -32,6 +32,7 @@ public class EmployeeDAO implements EmployeeService {
 	 * @param lastName	employee's last name. Max 50 characters
 	 * @param email		employee's email address
 	 * @param type		fulltime, parttime, casual employment status
+	 * @param passHash	the employee's hashed password value
 	 * @return			the fully constructed new Employee object
 	 */
 	@Override

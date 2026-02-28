@@ -26,6 +26,7 @@ public class WorkWeek {
 	private LocalDate weekStart; // Monday
 	private Map<LocalDate, WorkDay> week;
 	
+	// Constructor
 	public WorkWeek(LocalDate start) {
 		// No matter what date is entered, it will be
 		// pushed back to the previous day corresponding

@@ -3,7 +3,7 @@ CREATE DATABASE ShiftManager;
 
 USE ShiftManager;
 
--- Employee
+-- Employees
 CREATE TABLE employees (
 	userId		int			NOT NULL UNIQUE AUTO_INCREMENT,
 	firstName	varchar(50)	NOT NULL,
@@ -13,6 +13,17 @@ CREATE TABLE employees (
 	seniority	int,
 	passHash	varchar(255),
 	CONSTRAINT employees_PK PRIMARY KEY (userId)
+);
+
+-- Managers
+CREATE TABLE managers (
+	userId		int			NOT NULL UNIQUE AUTO_INCREMENT,
+	firstName	varchar(50)	NOT NULL,
+    lastName	varchar(50)	NOT NULL,
+	email		varchar(50) NOT NULL,
+	seniority	int,
+	passHash	varchar(255),
+	CONSTRAINT managers_PK PRIMARY KEY (userId)
 );
 
 -- Shifts Table

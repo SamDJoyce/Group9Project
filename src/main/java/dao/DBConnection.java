@@ -20,7 +20,7 @@ public class DBConnection {
     private static final String dbName      	 = "ShiftManager";
     private static final String employeesTable	 = "employees";
     private static final String shiftsTable		 = "shifts";
-    //private static final String supervisorsTable = "supervisors";
+    private static final String managersTable 	 = "managers";
     private static final String baseURL     	 = "jdbc:mysql://localhost/";
     private static final String fullURL			 = baseURL + dbName + "?serverTimezone=America/Toronto";
 	
@@ -74,7 +74,7 @@ public class DBConnection {
     				+ "type			varchar(20)	NOT NULL, "
     				+ "seniority	int, "
     				+ "passHash		varchar(255), "
-    				+ "CONSTRAINT employee_PK PRIMARY KEY (userId)"
+    				+ "CONSTRAINT employees_PK PRIMARY KEY (userId)"
     			+ " )";
     	
     	String createShiftsTable
@@ -83,15 +83,21 @@ public class DBConnection {
     				+ "start		timestamp	NOT NULL, "
     				+ "end			timestamp	NOT NULL, "
     				+ "userId		int			NULL, "
-    				+ "CONSTRAINT shift_PK PRIMARY KEY (shiftId), "
+    				+ "CONSTRAINT shifts_PK PRIMARY KEY (shiftId), "
     				+ "CONSTRAINT employee_FK FOREIGN KEY (userId) "
     				+ "REFERENCES employees (userId)"
     			+ ")";
     	
-//    	String createSupervisorsTable
-//    			= "CREATE TABLE IF NOT EXISTS " + supervisorsTable + "("
-//					+ "" // TODO
-//				+ ")";
+    	String createManagersTable
+    			= "CREATE TABLE IF NOT EXISTS " + managersTable + "("
+        				+ "userId		int			NOT NULL UNIQUE AUTO_INCREMENT, "
+        				+ "firstName	varchar(50)	NOT NULL, "
+        				+ "lastName		varchar(50)	NOT NULL, "
+        				+ "email		varchar(50) NOT NULL, "
+        				+ "seniority	int, "
+        				+ "passHash		varchar(255), "
+        				+ "CONSTRAINT managers_PK PRIMARY KEY (userId)"
+        			+ " )";
     	
     	try (Connection setupConnection = DriverManager.getConnection(baseURL, dbUser, dbPassword);
     			Statement statement = setupConnection.createStatement()) {
@@ -103,6 +109,7 @@ public class DBConnection {
     			// Create the tables
     			statement.executeUpdate(createEmployeesTable);
 				statement.executeUpdate(createShiftsTable);
+				statement.executeUpdate(createManagersTable);
     	}
     }
 

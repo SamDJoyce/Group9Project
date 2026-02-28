@@ -16,10 +16,11 @@ public abstract class User {
 	protected String firstName;
 	protected String lastName;
 	protected String email;
+	protected int 	 seniority;
 	protected String passHash;
 	
 	// Abstract Methods
-	public abstract Boolean isSupervisor();
+	public abstract Boolean isManager();
 	
 	// Methods
 	
@@ -67,6 +68,30 @@ public abstract class User {
 		this.email = email;
 	}
 	
+	public int getSeniority() {
+		return seniority;
+	}
+
+	/**
+	 * @param seniority employee's total time worked, in minutes
+	 */
+	public void setSeniority(int seniority) {
+		this.seniority = seniority;
+	}
+	
+	/**
+	 * @param 	TimeWorked adds time worked to an employee's total.
+	 * 			Stored in minutes
+	 * @return	new total seniority
+	 */
+	public int addSeniority(int timeWorked) {
+		return seniority += timeWorked;
+	}
+	
+	public int removeSeniority(int time) {
+		return seniority -= time;
+	}
+	
 	public String getPassHash() {
 		return passHash;
 	}
@@ -81,6 +106,7 @@ public abstract class User {
 		protected String firstName;
 		protected String lastName;
 		protected String email;
+		protected int 	 seniority;
 		protected String passHash;
 		
 		// Type agnostic Setters
@@ -102,6 +128,11 @@ public abstract class User {
 		
 		public T setEmail(String email) {
 			this.email = email;
+			return self();
+		}
+		
+		public T setSeniority(int seniority) {
+			this.seniority = seniority;
 			return self();
 		}
 		

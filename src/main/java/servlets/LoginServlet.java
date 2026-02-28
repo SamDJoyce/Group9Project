@@ -62,10 +62,9 @@ public class LoginServlet extends HttpServlet {
 	}
 	
 	private void bounce(HttpServletRequest request,
-			 HttpServletResponse response,
-			 String status)
-			 throws ServletException, IOException {
-
+			 			HttpServletResponse response,
+			 			String status)
+			 			throws ServletException, IOException {
 			request.setAttribute("status", status);
 			request.getRequestDispatcher(LOGIN_JSP)
 			.forward(request, response);

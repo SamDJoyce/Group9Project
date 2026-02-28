@@ -31,30 +31,6 @@ public class Employee extends User {
 		this.type = type;
 	}
 
-	public int getSeniority() {
-		return seniority;
-	}
-
-	/**
-	 * @param seniority employee's total time worked, in minutes
-	 */
-	public void setSeniority(int seniority) {
-		this.seniority = seniority;
-	}
-	
-	/**
-	 * @param 	TimeWorked adds time worked to an employee's total.
-	 * 			Stored in minutes
-	 * @return	new total seniority
-	 */
-	public int addSeniority(int timeWorked) {
-		return seniority += timeWorked;
-	}
-	
-	public int removeSeniority(int time) {
-		return seniority -= time;
-	}
-	
 	public Boolean isFullTime() {
 		return type.isFullTime();
 	}
@@ -71,7 +47,7 @@ public class Employee extends User {
 		return type.isType(type);
 	}
 	
-	public Boolean isSupervisor() {
+	public Boolean isManager() {
 		return false;
 	}
 	
@@ -83,10 +59,6 @@ public class Employee extends User {
 		
 		public Builder setType(EmployeeType type) {
 			this.type = type;
-			return self();
-		}
-		public Builder setSeniority(int seniority) {
-			this.seniority = seniority;
 			return self();
 		}
 		public Builder setEligibility(ShiftEligibilityStrat eligibility) {

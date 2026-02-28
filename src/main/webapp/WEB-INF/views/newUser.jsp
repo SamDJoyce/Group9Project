@@ -13,6 +13,7 @@
 
 <body>
 <h1>Register New Employee</h1>
+	<div id="newUserStatus" class="statusMessage" >
 	<%
 	if (status != null) {
 	%>
@@ -20,9 +21,9 @@
 	<%
 	}
 	%>
+	</div>
 	
-
-	<form action="<%= request.getContextPath() %>/NewUser" method="post">
+	<div id="newUserForm"><form action="<%= request.getContextPath() %>/NewUser" method="post">
 		<!-- First Name -->
 		<label for="firstName">First Name: </label>
 		<input id="firstName" name="firstName" type="text" required> <br>
@@ -40,7 +41,9 @@
 		<input type='radio' name='type' id='partTime' value='partTime' required>
 		<label for='partTime'>Part time</label><br>
 		<input type='radio' name='type' id='casual' value='casual' required>
-		<label for='casual'>Casual</label><br><br>
+		<label for='casual'>Casual</label><br>
+		<input type='radio' name='type' id='manager' value='manager' required>
+		<label for='manager'>Manager</label><br><br>
 		<!-- Password -->
 		<label for="password">Enter password: </label>
 		<input type="password" id="password" name="password" minlength="8" required><br>
@@ -48,7 +51,7 @@
 		<input type="password" id="confirmPass" name="confirmPass" minlength="8" required><br><br>
 		<input type="hidden" name="action" value="createUser">
 		<input type="submit">
-	</form>
+	</form></div>
 </body>
 
 </html>

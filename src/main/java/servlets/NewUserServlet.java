@@ -7,11 +7,15 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import security.PasswordUtility;
 import services.EmployeeService;
+import services.ManagerService;
 import users.Employee;
+import users.Manager;
+import users.User;
 
 import java.io.IOException;
 
 import dao.EmployeeDAO;
+import dao.ManagerDAO;
 
 /**
  * Servlet controlling the new user creation page NewUser.jsp
@@ -20,6 +24,8 @@ import dao.EmployeeDAO;
  */
 @WebServlet("/NewUser")
 public class NewUserServlet extends HttpServlet {
+	private static final String MANAGER = "manager";
+
 	private static final String SUCCESSFULL_CREATION = "successfullCreation";
 
 	private static final String FAILED_CREATION = "failedCreation";
@@ -38,6 +44,7 @@ public class NewUserServlet extends HttpServlet {
 	private static final String LOGIN_JSP = "/WEB-INF/views/login.jsp";
 	
 	private static final EmployeeService emplServ = new EmployeeDAO();
+	private static final ManagerService manServ   = new ManagerDAO();
        
     /**
      * @see HttpServlet#HttpServlet()
@@ -91,26 +98,51 @@ public class NewUserServlet extends HttpServlet {
 	            return;
 	        }
 	        
-	        // ----- Create Employee -----
+	        // ----- Create User -----
 	        String firstName = request.getParameter("firstName");
 	        String lastName  = request.getParameter("lastName");
 	        String type      = request.getParameter("type");
-
-	        String passHash = PasswordUtility.hashPassword(password.toCharArray());
-
-	        Employee empl = emplServ.createEmployee(firstName, lastName, email, type, passHash);
+	        String passHash  = PasswordUtility.hashPassword(
+	        					password.toCharArray());
 	        
-	        if (empl == null) {
-	        	status = FAILED_CREATION;
-	        	bounce(request, response, status);
+	        if (!MANAGER.equalsIgnoreCase(type)) {
+	        	// Create Employee
+	        	Employee empl = emplServ.createEmployee(
+	        			firstName,
+	        			lastName, 
+	        			email, 
+	        			type,
+	        			passHash);
+	        
+		        if (creationFailed(empl)) {
+		        	status = FAILED_CREATION;
+		        	bounce(request, response, status);
+		        }
 	        } else {
-	        	status = SUCCESSFULL_CREATION;
-	        	request.getRequestDispatcher(LOGIN_JSP)
-				.forward(request, response);
+	        	// Create Manager
+	        	Manager man = manServ.createManager(
+	        			firstName, 
+	        			lastName, 
+	        			email, 
+	        			passHash);
+	        	if (creationFailed(man)) {
+	        		status = FAILED_CREATION;
+		        	bounce(request, response, status);
+	        	}
 	        }
-	    } // Else if (other actions)
-	}
+	        
+	        status = SUCCESSFULL_CREATION;
+    		request.getRequestDispatcher(LOGIN_JSP)
+			.forward(request, response);
+	    } else {
+	    	bounce(request, response, status);
+	    }
+    }
  
+	private Boolean creationFailed (User user) {
+		return user == null;
+	}
+	
 	/**
 	 * Return the user to the new user page
 	 * with a status message.
