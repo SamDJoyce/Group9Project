@@ -1,0 +1,107 @@
+@charset "UTF-8";
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Body styling */
+body {
+    background-color: #f5f7fa;
+    color: #2c3e50;
+    padding: 40px;
+    line-height: 1.6;
+}
+
+/* Page heading */
+h1 {
+    font-size: 28px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    color: #1a1a1a;
+}
+
+/* Status message */
+.statusMessage {
+    background-color: #f0f4f7;
+    border-left: 4px solid #3498db;
+    padding: 15px 20px;
+    margin-bottom: 25px;
+    border-radius: 4px;
+}
+
+.statusMessage h2 {
+    font-size: 18px;
+    color: #e74c3c; /* Red for errors, you can adjust dynamically */
+    margin: 0;
+}
+
+/* Form container */
+#newUserForm {
+    background-color: #ffffff;
+    padding: 25px 30px;
+    border-radius: 6px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    max-width: 500px;
+}
+
+/* Form labels */
+label {
+    display: block;
+    font-weight: 500;
+    margin-bottom: 6px;
+    color: #34495e;
+}
+
+/* Inputs */
+input[type="email"],
+input[type="password"],
+input[type="text"] {
+    width: 200px;
+    padding: 10px 12px;
+    margin-bottom: 15px;
+    border: 1px solid #ccd0d5;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+/* Radio buttons */
+input[type="radio"] {
+    margin-right: 8px;
+    transform: scale(1.1);
+}
+
+/* Radio labels inline with spacing */
+label[for="fullTime"],
+label[for="partTime"],
+label[for="casual"],
+label[for="manager"] {
+    display: inline-block;
+    margin-bottom: 10px;
+    cursor: pointer;
+}
+
+/* Submit button */
+input[type="submit"] {
+    background-color: #3498db;
+    color: #ffffff;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 4px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+input[type="submit"]:hover {
+    background-color: #2980b9;
+}
+
+/* Paragraphs inside form (like "Employee Type") */
+p {
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: #2c3e50;
+}

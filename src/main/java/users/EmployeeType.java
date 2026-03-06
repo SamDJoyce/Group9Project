@@ -1,8 +1,8 @@
 package users;
 
 public enum EmployeeType {
-	FULL_TIME(40,40),
-	PART_TIME(25,40),
+	FULLTIME(40,40),
+	PARTTIME(25,40),
 	CASUAL(0,25);
 	
 	private final int minHours;
@@ -31,11 +31,11 @@ public enum EmployeeType {
 	}
 	
 	public Boolean isFullTime() {
-		return FULL_TIME.equals(this);
+		return FULLTIME.equals(this);
 	}
 	
 	public Boolean isPartTime() {
-		return PART_TIME.equals(this);
+		return PARTTIME.equals(this);
 	}
 	
 	public Boolean isCasual() {

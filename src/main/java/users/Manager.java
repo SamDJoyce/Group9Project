@@ -10,6 +10,10 @@ public class Manager extends User {
 		return true;
 	}
 	
+	public String getType() {
+		return "Manager";
+	}
+	
 	public static class Builder extends User.Builder<Builder>{
 		
 		@Override

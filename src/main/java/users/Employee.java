@@ -23,8 +23,8 @@ public class Employee extends User {
 	}
 
 	// Methods
-	public EmployeeType getType() {
-		return type;
+	public String getType() {
+		return type.toString();
 	}
 
 	public void setType(EmployeeType type) {

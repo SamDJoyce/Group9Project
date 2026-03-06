@@ -8,22 +8,22 @@
 
 <head>
 	<meta charset="UTF-8">
+	<link rel="stylesheet" href="<%= request.getContextPath() %>/css/styles.css">
 	<title>Register New User</title>
 </head>
-
 <body>
-<h1>Register New Employee</h1>
-	<div id="newUserStatus" class="statusMessage" >
+<a href="<%= request.getContextPath() %>/login">Back to Login page</a><br>
+<h1>Register New User</h1>
 	<%
 	if (status != null) {
 	%>
+		<div id="newUserStatus" class="statusMessage" >
 		<h2><%= status %></h2><br><br>
+		</div>
 	<%
 	}
 	%>
-	</div>
-	
-	<div id="newUserForm"><form action="<%= request.getContextPath() %>/NewUser" method="post">
+	<div id="newUserForm"><form action="<%= request.getContextPath() %>/newUser" method="post">
 		<!-- First Name -->
 		<label for="firstName">First Name: </label>
 		<input id="firstName" name="firstName" type="text" required> <br>

@@ -21,6 +21,8 @@ public abstract class User {
 	
 	// Abstract Methods
 	public abstract Boolean isManager();
+
+	public abstract String getType();
 	
 	// Methods
 	

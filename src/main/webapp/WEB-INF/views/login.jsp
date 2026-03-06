@@ -6,27 +6,38 @@
 
 <head>
 	<meta charset="UTF-8">
+	<link rel="stylesheet" href="<%= request.getContextPath() %>/css/styles.css">
 	<title>Account Login</title>
 </head>
 
 <body>
-	<h2>ShiftManager — Login</h2>
+	<h2>ShiftManager — Login</h2><br>
 
 <%
     String error = (String) request.getAttribute("loginError");
     if (error != null) {
 %>
-    <p style="color:red">Login error: <%= error %></p>
+    	<p style="color:red">Login error: <%= error %></p>
+<%
+    }
+    
+    String status = (String) request.getAttribute("status");
+    if (status != null){
+%>
+		<p style="color:green">Account created successfully!</p>
 <%
     }
 %>
 
+
 <form method="post" action="<%= request.getContextPath() %>/login">
-    Email: <input name="email"><br>
-    Password: <input name="password" type="password"><br>
-    <button type="submit">Sign in</button>
-</form>
-<p>Don't have an account? <a href="<%= request.getContextPath() %>/NewUser">Register here</a></p>
+    <label for="email">Email:</label>
+    <input name="email" type="email" id="email"><br>
+    <label for="password">Password:</label>
+    <input name="password" id="password" type="password"><br>
+    <input type="submit" id="signInButton" value="Sign In">
+</form><br>
+<p>Don't have an account? <a href="<%= request.getContextPath() %>/newUser">Register here</a></p>
 </body>
 
 </html>

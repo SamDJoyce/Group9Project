@@ -22,7 +22,7 @@ import dao.ManagerDAO;
  * 
  * @author Sam Joyce
  */
-@WebServlet("/NewUser")
+@WebServlet("/newUser")
 public class NewUserServlet extends HttpServlet {
 	private static final String MANAGER = "manager";
 
@@ -132,6 +132,7 @@ public class NewUserServlet extends HttpServlet {
 	        }
 	        
 	        status = SUCCESSFULL_CREATION;
+	        request.setAttribute("status", status);
     		request.getRequestDispatcher(LOGIN_JSP)
 			.forward(request, response);
 	    } else {

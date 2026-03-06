@@ -65,6 +65,7 @@ public class DBConnection {
     private void createDataBaseIfNeeded() throws SQLException {
     	String createDB	= " CREATE DATABASE IF NOT EXISTS " + dbName 
 				   		+ " DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci";
+    	
     	String createEmployeesTable 
     			= "CREATE TABLE IF NOT EXISTS " + employeesTable + " ("
     				+ "userId		int			NOT NULL UNIQUE AUTO_INCREMENT, "
@@ -77,27 +78,32 @@ public class DBConnection {
     				+ "CONSTRAINT employees_PK PRIMARY KEY (userId)"
     			+ " )";
     	
+    	String createManagersTable
+		= "CREATE TABLE IF NOT EXISTS " + managersTable + "("
+				+ "userId		int			NOT NULL UNIQUE AUTO_INCREMENT, "
+				+ "firstName	varchar(50)	NOT NULL, "
+				+ "lastName		varchar(50)	NOT NULL, "
+				+ "email		varchar(50) NOT NULL, "
+				+ "seniority	int, "
+				+ "passHash		varchar(255), "
+				+ "CONSTRAINT managers_PK PRIMARY KEY (userId)"
+			+ " )";
+    	
     	String createShiftsTable
     			= "CREATE TABLE IF NOT EXISTS " + shiftsTable + " ("
     				+ "shiftId		int			NOT NULL UNIQUE AUTO_INCREMENT, "
     				+ "start		timestamp	NOT NULL, "
     				+ "end			timestamp	NOT NULL, "
-    				+ "userId		int			NULL, "
+    				+ "employeeId	int			NULL, "
+    				+ "managerId	int			NOT NULL, "
     				+ "CONSTRAINT shifts_PK PRIMARY KEY (shiftId), "
-    				+ "CONSTRAINT employee_FK FOREIGN KEY (userId) "
-    				+ "REFERENCES employees (userId)"
+    				+ "CONSTRAINT employee_FK FOREIGN KEY (employeeId) "
+    				+ 	"REFERENCES " + employeesTable + " (userId), "
+    				+ "CONSTRAINT manager_FK FOREIGN KEY (managerId) "
+    				+ 	"REFERENCES " + managersTable + " (userId) "
     			+ ")";
     	
-    	String createManagersTable
-    			= "CREATE TABLE IF NOT EXISTS " + managersTable + "("
-        				+ "userId		int			NOT NULL UNIQUE AUTO_INCREMENT, "
-        				+ "firstName	varchar(50)	NOT NULL, "
-        				+ "lastName		varchar(50)	NOT NULL, "
-        				+ "email		varchar(50) NOT NULL, "
-        				+ "seniority	int, "
-        				+ "passHash		varchar(255), "
-        				+ "CONSTRAINT managers_PK PRIMARY KEY (userId)"
-        			+ " )";
+
     	
     	try (Connection setupConnection = DriverManager.getConnection(baseURL, dbUser, dbPassword);
     			Statement statement = setupConnection.createStatement()) {
@@ -108,8 +114,9 @@ public class DBConnection {
     			Statement statement = setupConnection.createStatement()) {
     			// Create the tables
     			statement.executeUpdate(createEmployeesTable);
+    			statement.executeUpdate(createManagersTable);
 				statement.executeUpdate(createShiftsTable);
-				statement.executeUpdate(createManagersTable);
+				
     	}
     }
 

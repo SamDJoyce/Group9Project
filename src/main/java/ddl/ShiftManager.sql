@@ -4,7 +4,7 @@ CREATE DATABASE ShiftManager;
 USE ShiftManager;
 
 -- Employees
-CREATE TABLE employees (
+CREATE TABLE IF NOT EXISTS employees (
 	userId		int			NOT NULL UNIQUE AUTO_INCREMENT,
 	firstName	varchar(50)	NOT NULL,
     lastName	varchar(50)	NOT NULL,
@@ -16,7 +16,7 @@ CREATE TABLE employees (
 );
 
 -- Managers
-CREATE TABLE managers (
+CREATE TABLE IF NOT EXISTS managers (
 	userId		int			NOT NULL UNIQUE AUTO_INCREMENT,
 	firstName	varchar(50)	NOT NULL,
     lastName	varchar(50)	NOT NULL,
@@ -27,13 +27,15 @@ CREATE TABLE managers (
 );
 
 -- Shifts Table
-CREATE TABLE shifts (
+CREATE TABLE IF NOT EXISTS shifts (
 	shiftId		int			NOT NULL UNIQUE AUTO_INCREMENT,
 	start		timestamp	NOT NULL,
 	end			timestamp	NOT NULL,
 	status		varchar(12) NOT NULL,
 	employeeId	int			NULL,
+	managerId	int			NOT NULL,
 	CONSTRAINT shifts_PK PRIMARY KEY (shiftId),
-	CONSTRAINT employee_FK FOREIGN KEY (employeeId) REFERENCES employees (userId)
+	CONSTRAINT employee_FK FOREIGN KEY (employeeId) REFERENCES employees (userId),
+	CONSTRAINT manager_FK FOREIGN KEY (managerId) REFERENCES managers (userId)
 );
 

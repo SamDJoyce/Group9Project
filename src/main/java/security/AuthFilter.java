@@ -25,8 +25,8 @@ public class AuthFilter implements Filter {
         boolean isPublic =
                 path.equals("/") ||
                 path.equals("/login") ||          // login page
-                path.equals("/NewUser") ||        // registration page
-                path.startsWith("/style") ||      // CSS
+                path.equals("/newUser") ||        // registration page
+                path.startsWith("/css") ||        // CSS
                 path.endsWith(".css") ||
                 path.startsWith("/images/") ||
                 path.startsWith("/img/");
