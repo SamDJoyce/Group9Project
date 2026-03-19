@@ -25,9 +25,9 @@ public class LoginServlet extends HttpServlet {
 	private static final String LOGIN_ERROR 	 = "LoginError";
 	private static final String MANAGER			 = "manager";
 	private static final String EMPLOYEE		 = "employee";
-	private static final String MANAGER_DASH 	= "/managerDash";
-	private static final String EMPLOYEE_DASH 	= "/employeeDash";
-	private static final String LOGIN_JSP 		= "/WEB-INF/views/login.jsp";
+	private static final String MANAGER_DASH 	 = "/managerDash";
+	private static final String EMPLOYEE_DASH 	 = "/employeeDash";
+	private static final String LOGIN_JSP 		 = "/WEB-INF/views/login.jsp";
 	
 	private static final UserService userServ = new UserDAO();
 	private static final long serialVersionUID = 1L;

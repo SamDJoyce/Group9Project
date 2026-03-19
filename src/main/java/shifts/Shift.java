@@ -4,6 +4,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 
 import users.Employee;
+import users.User;
 
 /**
  * Contains the logic for a single shift,
@@ -14,6 +15,7 @@ import users.Employee;
  */
 public class Shift {
 	
+	private static final String ONLY_EMPLOYEES = "Only employees may be assigned.";
 	private static final String DURATION_EX = "Shift end must be after shift start.";
 
 	public Shift() {
@@ -90,8 +92,12 @@ public class Shift {
 	/**
 	 * @param employee the person assigned to work this shift
 	 */
-	public void assignEmployee(Employee employee) {
-		this.employee = employee;
+	public void assignEmployee(User user) {
+		if (user.isManager()) {
+			throw new IllegalArgumentException(ONLY_EMPLOYEES);
+		} else {
+			this.employee = (Employee)user;
+		}
 	}
 	
 	/**
@@ -143,8 +149,12 @@ public class Shift {
 			return this;
 		}
 		
-		public Builder assignEmployee(Employee employee) {
-			this.employee = employee;
+		public Builder assignEmployee(User user) {
+			if (user.isManager()) {
+				throw new IllegalArgumentException(ONLY_EMPLOYEES);
+			} else {
+				this.employee = (Employee)user;
+			}
 			return this;
 		}
 		

@@ -17,7 +17,7 @@ import services.ShiftService;
 import shifts.Shift;
 import shifts.ShiftStatusFactory;
 import users.Employee;
-import users.EmployeeFactory;
+import users.UserFactory;
 
 /**
  * Mediates database interactions for Shift objects.
@@ -177,7 +177,7 @@ public class ShiftDAO implements ShiftService {
 						.setStatus(ShiftStatusFactory.get(resSet.getString("status")))
 						.build();
 				if (resSet.getInt("userId") != 0) {
-					shift.assignEmployee (EmployeeFactory.get(
+					shift.assignEmployee (UserFactory.get(
 											resSet.getInt   ("userId"), 
 											resSet.getString("firstName"), 
 											resSet.getString("lastName"), 
@@ -238,7 +238,7 @@ public class ShiftDAO implements ShiftService {
 								 .setStatus(ShiftStatusFactory.get(resSet.getString("status")))
 								 .build();
 				if (resSet.getInt("userId") != 0) {
-					 shift.assignEmployee(EmployeeFactory.get(
+					 shift.assignEmployee(UserFactory.get(
 											resSet.getInt   ("userId"), 
 											resSet.getString("firstName"), 
 											resSet.getString("lastName"), 
@@ -349,7 +349,7 @@ public class ShiftDAO implements ShiftService {
 								 .setStatus(ShiftStatusFactory.get(resSet.getString("status")))
 								 .build();
 				if (resSet.getInt("userId") != 0) {
-					 shift.assignEmployee(EmployeeFactory.get(
+					 shift.assignEmployee(UserFactory.get(
 											resSet.getInt   ("userId"), 
 											resSet.getString("firstName"), 
 											resSet.getString("lastName"), 

@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
 import schedule.WorkDay;
 import shifts.Shift;
 import users.Employee;
-import users.EmployeeFactory;
+import users.UserFactory;
 
 class WorkDayTest {
 
@@ -31,7 +31,7 @@ class WorkDayTest {
         workDay  = new WorkDay(date,
         					   dayStart,
         					   dayEnd);
-        empl = EmployeeFactory.get(
+        empl = (Employee) UserFactory.get(
 				        		1, 
 				        		"Crash", 
 				        		"Testman", 
@@ -39,7 +39,7 @@ class WorkDayTest {
 				        		"fullTime", 
 				        		0, 
 				        		"123456789" );
-        empl2 = EmployeeFactory.get(
+        empl2 = (Employee) UserFactory.get(
 				        		2, 
 				        		"Smash", 
 				        		"Testman",

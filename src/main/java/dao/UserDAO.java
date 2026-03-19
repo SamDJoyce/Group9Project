@@ -7,8 +7,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import services.UserService;
-import users.Employee;
-import users.EmployeeFactory;
 import users.User;
 import users.UserFactory;
 
@@ -151,7 +149,7 @@ public class UserDAO implements UserService {
 			statement.setString(1, email);
 			resSet = statement.executeQuery();
 			if (resSet.next()) {
-				user = EmployeeFactory.get(	resSet.getInt	("userId"), 
+				user = UserFactory.get(	resSet.getInt	("userId"), 
 											resSet.getString("firstName"), 
 											resSet.getString("lastName"), 
 											resSet.getString("email"),

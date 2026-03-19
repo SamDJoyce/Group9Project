@@ -16,7 +16,7 @@ import schedule.WorkDay;
 import schedule.WorkWeek;
 import shifts.Shift;
 import users.Employee;
-import users.EmployeeFactory;
+import users.UserFactory;
 
 class WorkWeekTest {
 
@@ -32,7 +32,7 @@ class WorkWeekTest {
 		monday = LocalDate.of(2026, 1, 19); // Monday
 	    dayStart = monday.atTime(9,0);
 	    dayEnd   = monday.atTime(21,0);
-        empl = EmployeeFactory.get(
+        empl = (Employee) UserFactory.get(
         		1, 
         		"Crash", 
         		"Testman", 
@@ -40,7 +40,7 @@ class WorkWeekTest {
         		"fullTime", 
         		0, 
         		"123456789" );
-        empl2 = EmployeeFactory.get(
+        empl2 = (Employee) UserFactory.get(
         		2, 
         		"Smash", 
         		"Testman",

@@ -116,6 +116,7 @@ public class WorkDay {
 	     if (isDoubleBooked(shift)) {
 	    	 return false;
 	     }
+	     // Shift is valid
 	    return true;
 	}
 	
@@ -202,11 +203,11 @@ public class WorkDay {
 	                         .equals(shift.getEmployee())) {
 	                continue;
 	            }
-	            
+	         
 	            LocalDateTime existingStart = existing.getStart();
 	            LocalDateTime existingEnd   = existing.getEnd();
 				// Check if the already assigned shift overlaps with new shift
-	            return  start.isBefore(existingEnd) &&
+	            return  start.isBefore(existingEnd) ||
 	                    end.isAfter(existingStart);
 	    	}
 	    }
