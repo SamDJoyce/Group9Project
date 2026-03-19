@@ -2,7 +2,7 @@ package servlets;
 
 import java.io.IOException;
 
-import dao.EmployeeDAO;
+import dao.UserDAO;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -10,7 +10,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import security.PasswordUtility;
-import services.EmployeeService;
+import services.UserService;
 import users.User;
 
 /**
@@ -21,7 +21,7 @@ import users.User;
 @WebServlet("/login")
 public class LoginServlet extends HttpServlet {
 	private static final String STATUS 			 = "status";
-	private static final String LOGIN_SUCCESSFUL = "login successful";
+	private static final String LOGIN_SUCCESSFUL = "loginSuccessful";
 	private static final String LOGIN_ERROR 	 = "LoginError";
 	private static final String MANAGER			 = "manager";
 	private static final String EMPLOYEE		 = "employee";
@@ -29,7 +29,7 @@ public class LoginServlet extends HttpServlet {
 	private static final String EMPLOYEE_DASH 	= "/employeeDash";
 	private static final String LOGIN_JSP 		= "/WEB-INF/views/login.jsp";
 	
-	private static final EmployeeService emplServ = new EmployeeDAO();
+	private static final UserService emplServ = new UserDAO();
 	private static final long serialVersionUID = 1L;
 
 	/**
@@ -51,7 +51,7 @@ public class LoginServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String   email    = request.getParameter("email");
 		String   password = request.getParameter("password");
-		User     user     = emplServ.getEmployeeByEmail(email);
+		User     user     = emplServ.getUserByEmail(email);
 		
 		
 		if (user != null 

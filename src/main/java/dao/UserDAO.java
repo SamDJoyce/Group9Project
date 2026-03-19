@@ -6,21 +6,22 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import services.EmployeeService;
+import services.UserService;
 import users.Employee;
 import users.EmployeeFactory;
+import users.User;
 
 /**
- * Implements EmployeeService for MySQL.
+ * Implements UserService for MySQL.
  * Mediates all Employee table interactions.
  * 
  * @author Sam Joyce
  */
-public class EmployeeDAO implements EmployeeService {
+public class UserDAO implements UserService {
 
-	private static final String employeesTable = "employees";
+	private static final String usersTable = "users";
 	
-	public EmployeeDAO() {
+	public UserDAO() {
 	}
 
 	/**
@@ -36,14 +37,14 @@ public class EmployeeDAO implements EmployeeService {
 	 * @return			the fully constructed new Employee object
 	 */
 	@Override
-	public Employee createEmployee(String firstName, 
+	public Employee createUser(String firstName, 
 								   String lastName, 
 								   String email, 
 								   String type,
 								   String passHash) {
 		Employee empl = EmployeeFactory.get(firstName, lastName, email, type, passHash);
 		
-		String insertNewEmployee = "INSERT INTO " + employeesTable + " ("
+		String insertNewEmployee = "INSERT INTO " + usersTable + " ("
 				+ "firstName, lastName, email, type, seniority, passHash) "
 				+ "VALUES (?,?,?,?,0,?)";
 		
@@ -89,12 +90,12 @@ public class EmployeeDAO implements EmployeeService {
 	 * @param userId the userId of the employee to be retrieved.
 	 */
 	@Override
-	public Employee getEmployee(int userId) {
-		Employee empl = null;
+	public User getUser(int userId) {
+		User user = null;
 		Connection connection = null;
 		PreparedStatement statement = null;
 		ResultSet resSet = null;
-		String getUser = "SELECT * FROM " + employeesTable + " WHERE userId = ?";
+		String getUser = "SELECT * FROM " + usersTable + " WHERE userId = ?";
 		
 		try {
 			connection = DBConnection.getInstance().getConnection();
@@ -102,7 +103,7 @@ public class EmployeeDAO implements EmployeeService {
 			statement.setInt(1, userId);
 			resSet = statement.executeQuery();
 			if (resSet.next()) {
-				empl = EmployeeFactory.get(	resSet.getInt	("userId"), 
+				user = EmployeeFactory.get(	resSet.getInt	("userId"), 
 											resSet.getString("firstName"), 
 											resSet.getString("lastName"), 
 											resSet.getString("email"),
@@ -125,16 +126,16 @@ public class EmployeeDAO implements EmployeeService {
 				e.printStackTrace();
 			}
 		}
-		return empl;
+		return user;
 	}
 	
 	@Override
-	public Employee getEmployeeByEmail(String email) {
-		Employee empl = null;
+	public User getUserByEmail(String email) {
+		User user = null;
 		Connection connection = null;
 		PreparedStatement statement = null;
 		ResultSet resSet = null;
-		String getUser = "SELECT * FROM " + employeesTable + " WHERE email = ?";
+		String getUser = "SELECT * FROM " + usersTable + " WHERE email = ?";
 		
 		try {
 			connection = DBConnection.getInstance().getConnection();
@@ -142,7 +143,7 @@ public class EmployeeDAO implements EmployeeService {
 			statement.setString(1, email);
 			resSet = statement.executeQuery();
 			if (resSet.next()) {
-				empl = EmployeeFactory.get(	resSet.getInt	("userId"), 
+				user = EmployeeFactory.get(	resSet.getInt	("userId"), 
 											resSet.getString("firstName"), 
 											resSet.getString("lastName"), 
 											resSet.getString("email"),
@@ -165,15 +166,15 @@ public class EmployeeDAO implements EmployeeService {
 				e.printStackTrace();
 			}
 		}
-		return empl;
+		return user;
 	}
 
 	/**
 	 * @param userId the userId of the employee to be deleted.
 	 */
 	@Override
-	public void deleteEmployee(int userId) {
-	    String deleteEmpl = "DELETE FROM " + employeesTable + " WHERE userId = ?";
+	public void deleteUser(int userId) {
+	    String deleteEmpl = "DELETE FROM " + usersTable + " WHERE userId = ?";
 
 	    try (Connection connection = DBConnection.getInstance().getConnection();
 	         PreparedStatement statement = connection.prepareStatement(deleteEmpl)) {
@@ -188,8 +189,8 @@ public class EmployeeDAO implements EmployeeService {
 	}
 
 	@Override
-	public void updateEmployee(Employee employee) {
-		String updateEmployee = "UPDATE " + employeesTable + " SET "
+	public void updateUser(User user) {
+		String updateUser = "UPDATE " + usersTable + " SET "
 				+ "firstName = ?, "
 				+ "lastName = ?, "
 				+ "email = ?, "
@@ -200,13 +201,13 @@ public class EmployeeDAO implements EmployeeService {
 		
 		try {
 			connection = DBConnection.getInstance().getConnection();
-			statement = connection.prepareStatement(updateEmployee);
+			statement = connection.prepareStatement(updateUser);
 			
-			statement.setString(1, employee.getFirstName());
-			statement.setString(2, employee.getLastName());
-			statement.setString(3, employee.getEmail());
-			statement.setString(4, employee.getType().toString());
-			statement.setInt   (5, employee.getSeniority());
+			statement.setString(1, user.getFirstName());
+			statement.setString(2, user.getLastName());
+			statement.setString(3, user.getEmail());
+			statement.setString(4, user.getType().toString());
+			statement.setInt   (5, user.getSeniority());
 			
 			statement.executeUpdate();
 			

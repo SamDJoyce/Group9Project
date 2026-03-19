@@ -6,7 +6,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import security.PasswordUtility;
-import services.EmployeeService;
+import services.UserService;
 import services.ManagerService;
 import users.Employee;
 import users.Manager;
@@ -14,7 +14,7 @@ import users.User;
 
 import java.io.IOException;
 
-import dao.EmployeeDAO;
+import dao.UserDAO;
 import dao.ManagerDAO;
 
 /**
@@ -43,7 +43,7 @@ public class NewUserServlet extends HttpServlet {
 	private static final String NEW_USER_JSP = "/WEB-INF/views/newUser.jsp";
 	private static final String LOGIN_JSP = "/WEB-INF/views/login.jsp";
 	
-	private static final EmployeeService emplServ = new EmployeeDAO();
+	private static final UserService emplServ = new UserDAO();
 	private static final ManagerService manServ   = new ManagerDAO();
        
     /**
@@ -79,7 +79,7 @@ public class NewUserServlet extends HttpServlet {
 	            return;
 	        }
 	        // Confirm the email has not already been used
-	        if (emplServ.getEmployeeByEmail(email) != null) {
+	        if (emplServ.getUserByEmail(email) != null) {
 	        	bounce(request, response, EMAIL_EXISTS);
 	            return;
 	        }
@@ -107,7 +107,7 @@ public class NewUserServlet extends HttpServlet {
 	        
 	        if (!MANAGER.equalsIgnoreCase(type)) {
 	        	// Create Employee
-	        	Employee empl = emplServ.createEmployee(
+	        	Employee empl = emplServ.createUser(
 	        			firstName,
 	        			lastName, 
 	        			email, 

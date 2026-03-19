@@ -5,6 +5,9 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+import users.User;
+
 import java.io.IOException;
 
 /**
@@ -29,6 +32,15 @@ public class ManagerDashServlet extends HttpServlet {
 		// Check user is an authorized Manager
 		// TODO
 		// If they are, forward the user to their Manager Dashboard
+		HttpSession s = request.getSession(false);
+		Integer userId = (Integer) s.getAttribute("userId");
+		User u;
+		if (userId == null) {
+			bounce(request, response, "loginError");
+		} else {
+			u = 
+		}
+		
 		request.getRequestDispatcher(MAN_DASH_JSP)
 		.forward(request, response);
 	}
@@ -40,6 +52,16 @@ public class ManagerDashServlet extends HttpServlet {
 		
 		
 		request.getRequestDispatcher(MAN_DASH_JSP)
+		.forward(request, response);
+	}
+	
+	private void bounce(HttpServletRequest request,
+			 HttpServletResponse response,
+			 String status)
+			 throws ServletException, IOException {
+
+		request.setAttribute("status", status);
+		request.getRequestDispatcher("/login")
 		.forward(request, response);
 	}
 

@@ -1,6 +1,7 @@
 package services;
 
 import users.Employee;
+import users.User;
 
 /**
  * Interface defining the available interactions with
@@ -8,7 +9,7 @@ import users.Employee;
  * 
  * @author Sam Joyce
  */
-public interface EmployeeService {
+public interface UserService {
 
 	/**
 	 * Create an Employee object and insert it
@@ -19,11 +20,11 @@ public interface EmployeeService {
 	 * @param type	employee type (FullTime, PartTime, Casual)
 	 * @return		the new Employee object
 	 */
-	Employee createEmployee( String firstName,
-							 String lastName,
-							 String email,
-							 String type,
-							 String passHash);
+	User createUser( String firstName,
+						 String lastName,
+						 String email,
+						 String type,
+						 String passHash);
 	
 	/**
 	 * Retrieves an Employee from the DB
@@ -32,7 +33,7 @@ public interface EmployeeService {
 	 * @param userId	Employee's userId
 	 * @return			the Employee object
 	 */
-	Employee getEmployee(int userId);
+	User getUser(int userId);
 	
 	/**
 	 * Retrieves an Employee from the DB
@@ -41,16 +42,16 @@ public interface EmployeeService {
 	 * @param email		Employee's email address
 	 * @return			the Employee object
 	 */
-	Employee getEmployeeByEmail(String email);
+	User getUserByEmail(String email);
 	
 	/**
 	 * @param userId	Employee's userId
 	 */
-	void deleteEmployee(int userId);
+	void deleteUser(int userId);
 	
 	/**
 	 * @param employee	object with new, unsaved
 	 * 					Employee information.
 	 */
-	void updateEmployee(Employee employee);
+	void updateUser(User user);
 }

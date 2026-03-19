@@ -4,8 +4,8 @@
     import="users.Employee"
 %>
 <%
+	HttpSession s = request.getSession(false);
 	Employee e = (Employee) request.getAttribute("employee");
-	String status = (String) request.getAttribute("status");
 %>
 <!DOCTYPE html>
 <html>
@@ -17,7 +17,24 @@
 </head>
 
 <body>
+<%
+    String status = (String) request.getAttribute("status");
+    if (status != null && "loginSuccessful".equalsIgnoreCase(status)){
+%>		
+		<p style="color:green">Login successful</p>
+<%
+    }
+%>
 	<h1>Welcome, <%= e.getFirstName() %></h1>
+	<br><br><br>
+<%
+	if (s != null && s.getAttribute("userId") != null){
+%>
+		<p>Signed in as <b><%= e.getFirstName() + " " + e.getLastName()%></b> • <a href='logout'>Logout</a></p>
+<%
+	}
+%>
+	
 </body>
 
 </html>

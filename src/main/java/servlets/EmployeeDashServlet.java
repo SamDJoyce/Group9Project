@@ -6,12 +6,12 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import services.EmployeeService;
+import services.UserService;
 import users.Employee;
 
 import java.io.IOException;
 
-import dao.EmployeeDAO;
+import dao.UserDAO;
 
 /**
  * Servlet implementation class EmployeeDashServlet
@@ -21,7 +21,7 @@ public class EmployeeDashServlet extends HttpServlet {
 	private static final String EMP_DASH_JSP = "/WEB-INF/views/employeeDashboard.jsp";
 	private static final long serialVersionUID = 1L;
 	
-	private static final EmployeeService emplServ = new EmployeeDAO();
+	private static final UserService emplServ = new UserDAO();
        
     /**
      * @see HttpServlet#HttpServlet()
@@ -40,7 +40,7 @@ public class EmployeeDashServlet extends HttpServlet {
 		if (userId == null) {
 			bounce(request, response, "loginError");
 		} else {
-			empl = emplServ.getEmployee(userId);
+			empl = emplServ.getUser(userId);
 			request.setAttribute("employee", empl);
 			String status = "loginSuccessful";
 			request.setAttribute("status", status);
@@ -66,6 +66,6 @@ public class EmployeeDashServlet extends HttpServlet {
 		request.setAttribute("status", status);
 		request.getRequestDispatcher("/login")
 		.forward(request, response);
-}
+	}
 
 }
