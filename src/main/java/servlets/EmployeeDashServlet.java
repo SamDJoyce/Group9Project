@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import services.UserService;
 import users.Employee;
+import users.User;
 
 import java.io.IOException;
 
@@ -21,7 +22,7 @@ public class EmployeeDashServlet extends HttpServlet {
 	private static final String EMP_DASH_JSP = "/WEB-INF/views/employeeDashboard.jsp";
 	private static final long serialVersionUID = 1L;
 	
-	private static final UserService emplServ = new UserDAO();
+	private static final UserService userServ = new UserDAO();
        
     /**
      * @see HttpServlet#HttpServlet()
@@ -36,12 +37,12 @@ public class EmployeeDashServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession s = request.getSession(false);
 		Integer userId = (Integer) s.getAttribute("userId");
-		Employee empl;
+		User user;
 		if (userId == null) {
 			bounce(request, response, "loginError");
 		} else {
-			empl = emplServ.getUser(userId);
-			request.setAttribute("employee", empl);
+			user = userServ.getUser(userId);
+			request.setAttribute("employee", user);
 			String status = "loginSuccessful";
 			request.setAttribute("status", status);
 		}

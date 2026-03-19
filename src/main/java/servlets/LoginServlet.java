@@ -29,7 +29,7 @@ public class LoginServlet extends HttpServlet {
 	private static final String EMPLOYEE_DASH 	= "/employeeDash";
 	private static final String LOGIN_JSP 		= "/WEB-INF/views/login.jsp";
 	
-	private static final UserService emplServ = new UserDAO();
+	private static final UserService userServ = new UserDAO();
 	private static final long serialVersionUID = 1L;
 
 	/**
@@ -51,7 +51,7 @@ public class LoginServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String   email    = request.getParameter("email");
 		String   password = request.getParameter("password");
-		User     user     = emplServ.getUserByEmail(email);
+		User     user     = userServ.getUserByEmail(email);
 		
 		
 		if (user != null 

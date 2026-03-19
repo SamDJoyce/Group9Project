@@ -138,7 +138,7 @@ public abstract class User {
 			return self();
 		}
 		
-		public T setPassHass(String passHash) {
+		public T setPassHash(String passHash) {
 			this.passHash = passHash;
 			return self();
 		}

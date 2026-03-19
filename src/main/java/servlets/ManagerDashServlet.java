@@ -6,9 +6,12 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import services.UserService;
 import users.User;
 
 import java.io.IOException;
+
+import dao.UserDAO;
 
 /**
  * Servlet implementation class ManagerDashServlet
@@ -17,6 +20,8 @@ import java.io.IOException;
 public class ManagerDashServlet extends HttpServlet {
 	private static final String MAN_DASH_JSP = "/WEB-INF/views/managerDashboard.jsp";
 	private static final long serialVersionUID = 1L;
+	
+	private static final UserService userServ = new UserDAO();
        
     /**
      * @see HttpServlet#HttpServlet()
@@ -37,8 +42,10 @@ public class ManagerDashServlet extends HttpServlet {
 		User u;
 		if (userId == null) {
 			bounce(request, response, "loginError");
-		} else {
-			u = 
+		}
+		u = userServ.getUser(userId);
+		if (!u.isManager()) {
+			bounce(request, response, "InsufficientRights");
 		}
 		
 		request.getRequestDispatcher(MAN_DASH_JSP)

@@ -18,7 +18,7 @@ public class DBConnection {
     private static final String dbUser 			 = "root";
     private static final String dbPassword  	 = "";
     private static final String dbName      	 = "ShiftManager";
-    private static final String employeesTable	 = "employees";
+    private static final String usersTable	 	 = "users";
     private static final String shiftsTable		 = "shifts";
     private static final String managersTable 	 = "managers";
     private static final String baseURL     	 = "jdbc:mysql://localhost/";
@@ -67,7 +67,7 @@ public class DBConnection {
 				   		+ " DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci";
     	
     	String createEmployeesTable 
-    			= "CREATE TABLE IF NOT EXISTS " + employeesTable + " ("
+    			= "CREATE TABLE IF NOT EXISTS " + usersTable + " ("
     				+ "userId		int			NOT NULL UNIQUE AUTO_INCREMENT, "
     				+ "firstName	varchar(50)	NOT NULL, "
     				+ "lastName		varchar(50)	NOT NULL, "
@@ -78,17 +78,6 @@ public class DBConnection {
     				+ "CONSTRAINT employees_PK PRIMARY KEY (userId)"
     			+ " )";
     	
-    	String createManagersTable
-		= "CREATE TABLE IF NOT EXISTS " + managersTable + "("
-				+ "userId		int			NOT NULL UNIQUE AUTO_INCREMENT, "
-				+ "firstName	varchar(50)	NOT NULL, "
-				+ "lastName		varchar(50)	NOT NULL, "
-				+ "email		varchar(50) NOT NULL, "
-				+ "seniority	int, "
-				+ "passHash		varchar(255), "
-				+ "CONSTRAINT managers_PK PRIMARY KEY (userId)"
-			+ " )";
-    	
     	String createShiftsTable
     			= "CREATE TABLE IF NOT EXISTS " + shiftsTable + " ("
     				+ "shiftId		int			NOT NULL UNIQUE AUTO_INCREMENT, "
@@ -98,9 +87,9 @@ public class DBConnection {
     				+ "managerId	int			NOT NULL, "
     				+ "CONSTRAINT shifts_PK PRIMARY KEY (shiftId), "
     				+ "CONSTRAINT employee_FK FOREIGN KEY (employeeId) "
-    				+ 	"REFERENCES " + employeesTable + " (userId), "
+    				+ 	"REFERENCES " + usersTable + " (userId), "
     				+ "CONSTRAINT manager_FK FOREIGN KEY (managerId) "
-    				+ 	"REFERENCES " + managersTable + " (userId) "
+    				+ 	"REFERENCES " + usersTable + " (userId) "
     			+ ")";
     	
 
@@ -114,7 +103,6 @@ public class DBConnection {
     			Statement statement = setupConnection.createStatement()) {
     			// Create the tables
     			statement.executeUpdate(createEmployeesTable);
-    			statement.executeUpdate(createManagersTable);
 				statement.executeUpdate(createShiftsTable);
 				
     	}

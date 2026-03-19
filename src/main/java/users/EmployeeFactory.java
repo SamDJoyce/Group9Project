@@ -42,7 +42,7 @@ public class EmployeeFactory {
 							   .setType(EmployeeType.fromString(type))
 							   .setSeniority(seniority)
 							   .setEligibility(EligFactory.get(type))
-							   .setPassHass(passHash)
+							   .setPassHash(passHash)
 							   .build();
 	}
 	
@@ -69,7 +69,7 @@ public class EmployeeFactory {
 							   .setType(EmployeeType.fromString(type))
 							   .setSeniority(0)
 							   .setEligibility(EligFactory.get(type))
-							   .setPassHass(passHash)
+							   .setPassHash(passHash)
 							   .build();
 	}
 }

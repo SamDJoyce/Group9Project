@@ -10,6 +10,7 @@ import services.UserService;
 import users.Employee;
 import users.EmployeeFactory;
 import users.User;
+import users.UserFactory;
 
 /**
  * Implements UserService for MySQL.
@@ -37,14 +38,21 @@ public class UserDAO implements UserService {
 	 * @return			the fully constructed new Employee object
 	 */
 	@Override
-	public Employee createUser(String firstName, 
-								   String lastName, 
-								   String email, 
-								   String type,
-								   String passHash) {
-		Employee empl = EmployeeFactory.get(firstName, lastName, email, type, passHash);
+	public User createUser(	String firstName, 
+							String lastName, 
+							String email, 
+							String type,
+							String passHash) {
 		
-		String insertNewEmployee = "INSERT INTO " + usersTable + " ("
+		User user = UserFactory.get(
+								firstName, 
+								lastName, 
+								email, 
+								type, 
+								passHash
+								);
+		
+		String insertUser = "INSERT INTO " + usersTable + " ("
 				+ "firstName, lastName, email, type, seniority, passHash) "
 				+ "VALUES (?,?,?,?,0,?)";
 		
@@ -54,7 +62,7 @@ public class UserDAO implements UserService {
 		
 		try {
 			connection = DBConnection.getInstance().getConnection();
-			statement = connection.prepareStatement(insertNewEmployee,
+			statement = connection.prepareStatement(insertUser,
 						Statement.RETURN_GENERATED_KEYS);
 			statement.setString(1, firstName);
 			statement.setString(2, lastName);
@@ -66,9 +74,9 @@ public class UserDAO implements UserService {
 			generatedKeys = statement.getGeneratedKeys();
 			if(generatedKeys.next()) {
 				int generatedUserID = generatedKeys.getInt(1);
-				empl.setUserId(generatedUserID);
+				user.setUserId(generatedUserID);
 			}
-			return empl;
+			return user;
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}finally{
@@ -103,14 +111,14 @@ public class UserDAO implements UserService {
 			statement.setInt(1, userId);
 			resSet = statement.executeQuery();
 			if (resSet.next()) {
-				user = EmployeeFactory.get(	resSet.getInt	("userId"), 
-											resSet.getString("firstName"), 
-											resSet.getString("lastName"), 
-											resSet.getString("email"),
-											resSet.getString("type"),
-											resSet.getInt   ("seniority"),
-											resSet.getString("passHash")
-											);
+				user = UserFactory.get(	resSet.getInt	("userId"), 
+										resSet.getString("firstName"), 
+										resSet.getString("lastName"), 
+										resSet.getString("email"),
+										resSet.getString("type"),
+										resSet.getInt   ("seniority"),
+										resSet.getString("passHash")
+										);
 			}
 		} catch(SQLException e) {
 			e.printStackTrace();

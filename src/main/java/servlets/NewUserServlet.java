@@ -7,15 +7,11 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import security.PasswordUtility;
 import services.UserService;
-import services.ManagerService;
-import users.Employee;
-import users.Manager;
 import users.User;
 
 import java.io.IOException;
 
 import dao.UserDAO;
-import dao.ManagerDAO;
 
 /**
  * Servlet controlling the new user creation page NewUser.jsp
@@ -24,27 +20,18 @@ import dao.ManagerDAO;
  */
 @WebServlet("/newUser")
 public class NewUserServlet extends HttpServlet {
-	private static final String MANAGER = "manager";
-
-	private static final String SUCCESSFULL_CREATION = "successfullCreation";
-
-	private static final String FAILED_CREATION = "failedCreation";
-
-	private static final String MISSING_EMAIL = "missingEmail";
-
-	private static final String EMAIL_EXISTS = "emailExists";
-
-	private static final String MISSING_PASSWORD = "missingPassword";
-
 	private static final long serialVersionUID = 1L;
-	
+	private static final String SUCCESSFULL_CREATION = "successfullCreation";
+	private static final String FAILED_CREATION = "failedCreation";
+	private static final String MISSING_EMAIL = "missingEmail";
+	private static final String EMAIL_EXISTS = "emailExists";
+	private static final String MISSING_PASSWORD = "missingPassword";
 	private static final String CREATE_USER = "createUser";
 	private static final String PASSWORD_MISMATCH = "passwordMismatch";
 	private static final String NEW_USER_JSP = "/WEB-INF/views/newUser.jsp";
 	private static final String LOGIN_JSP = "/WEB-INF/views/login.jsp";
 	
-	private static final UserService emplServ = new UserDAO();
-	private static final ManagerService manServ   = new ManagerDAO();
+	private static final UserService userServ = new UserDAO();
        
     /**
      * @see HttpServlet#HttpServlet()
@@ -79,7 +66,7 @@ public class NewUserServlet extends HttpServlet {
 	            return;
 	        }
 	        // Confirm the email has not already been used
-	        if (emplServ.getUserByEmail(email) != null) {
+	        if (userServ.getUserByEmail(email) != null) {
 	        	bounce(request, response, EMAIL_EXISTS);
 	            return;
 	        }
@@ -105,30 +92,17 @@ public class NewUserServlet extends HttpServlet {
 	        String passHash  = PasswordUtility.hashPassword(
 	        					password.toCharArray());
 	        
-	        if (!MANAGER.equalsIgnoreCase(type)) {
-	        	// Create Employee
-	        	Employee empl = emplServ.createUser(
-	        			firstName,
-	        			lastName, 
-	        			email, 
-	        			type,
-	        			passHash);
 	        
-		        if (creationFailed(empl)) {
-		        	status = FAILED_CREATION;
-		        	bounce(request, response, status);
-		        }
-	        } else {
-	        	// Create Manager
-	        	Manager man = manServ.createManager(
-	        			firstName, 
-	        			lastName, 
-	        			email, 
-	        			passHash);
-	        	if (creationFailed(man)) {
-	        		status = FAILED_CREATION;
-		        	bounce(request, response, status);
-	        	}
+        	// Create User
+        	User user = userServ.createUser(
+        			firstName,
+        			lastName, 
+        			email, 
+        			type,
+        			passHash);
+	        if (creationFailed(user)) {
+	        	status = FAILED_CREATION;
+	        	bounce(request, response, status);
 	        }
 	        
 	        status = SUCCESSFULL_CREATION;
