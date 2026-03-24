@@ -17,6 +17,7 @@ import services.ShiftService;
 import shifts.Shift;
 import shifts.ShiftStatusFactory;
 import users.Employee;
+import users.Manager;
 import users.UserFactory;
 
 /**
@@ -28,7 +29,7 @@ import users.UserFactory;
 public class ShiftDAO implements ShiftService {
 
 	public static final String shiftsTable = "shifts";
-	public static final String employeesTable = "employees";
+	public static final String usersTable = "users";
 	private static DayOfWeek FIRST_DAY = DayOfWeek.MONDAY;
 	
 	public ShiftDAO() {
@@ -42,14 +43,17 @@ public class ShiftDAO implements ShiftService {
 	 * @param	Data and Time the shift is complete.
 	 */
 	@Override
-	public Shift createShift(LocalDateTime start, LocalDateTime end) {
+	public Shift createShift(	LocalDateTime start, 
+								LocalDateTime end, 
+								Manager 	  manager) 
+	{
 		Shift shift = new Shift.Builder()
 							   .setStart(start)
 							   .setEnd(end)
 							   .build();
 		String newShift = "INSERT INTO " + shiftsTable + " ("
-						+ "start, end, status ) "
-						+ "VALUES (?,?,?)";
+						+ "start, end, status, managerId ) "
+						+ "VALUES (?,?,?,?)";
 		Connection 		  connection    = null;
 		PreparedStatement statement     = null;
 		ResultSet		  generatedKeys = null;
@@ -61,6 +65,7 @@ public class ShiftDAO implements ShiftService {
 			statement.setTimestamp(1, Timestamp.valueOf(start));
 			statement.setTimestamp(2, Timestamp.valueOf(end));
 			statement.setString   (3, shift.getStatus().toString());
+			statement.setInt	  (4, manager.getUserId());
 			
 			statement.executeUpdate();
 			generatedKeys = statement.getGeneratedKeys();
@@ -90,15 +95,20 @@ public class ShiftDAO implements ShiftService {
 	}
 
 	@Override
-	public Shift createShift(LocalDateTime start, LocalDateTime end, Employee employee) {
+	public Shift createShift(	LocalDateTime start, 
+								LocalDateTime end,
+								Manager  manager, 
+								Employee employee) 
+	{
 		Shift shift = new Shift.Builder()
 				   			   .setStart(start)
 				   			   .setEnd(end)
+				   			   .setManager(manager)
 				   			   .assignEmployee(employee)
 				   			   .build();
 		String newShift = "INSERT INTO " + shiftsTable + " ("
-						+ "start, end, status, userId ) "
-						+ "VALUES (?,?,?,?)";
+						+ "start, end, status, userId, managerId ) "
+						+ "VALUES (?,?,?,?,?)";
 		
 		Connection 		  connection    = null;
 		PreparedStatement statement     = null;
@@ -112,6 +122,7 @@ public class ShiftDAO implements ShiftService {
 			statement.setTimestamp(2, Timestamp.valueOf(end));
 			statement.setString   (3, shift.getStatus().toString());
 			statement.setInt	  (4, employee.getUserId());
+			statement.setInt	  (5, manager.getUserId());
 			
 			statement.executeUpdate();
 			generatedKeys = statement.getGeneratedKeys();
@@ -159,10 +170,32 @@ public class ShiftDAO implements ShiftService {
 		Connection connection = null;
 		PreparedStatement statement = null;
 		ResultSet resSet = null;
-		String getShift = "SELECT * FROM " + shiftsTable + " WHERE shiftId = ? "
-						+ "LEFT JOIN " + employeesTable + " "
-						+ "ON " + shiftsTable + ".userId = " 
-								+ employeesTable + ".userId";
+		String getShift = "SELECT "
+						+ "	s.start as start,"
+						+ "	s.end as end,"
+						+ " s.status as status"
+						+ " e.userId as employeeId"
+						+ "	e.firstName as employeeFirstName,"
+						+ " e.lastName as employeeLastName,"
+						+ " e.email as employeeEmail,"
+						+ " e.type as employeeType,"
+						+ " e.seniority as employeeSeniority,"
+						+ " e.passHash as employeePassHash"
+						+ " m.userId as managerId"
+						+ "	m.firstName as managerFirstName,"
+						+ " m.lastName as managerLastName,"
+						+ " m.email as managerEmail,"
+						+ " m.type as managerType,"
+						+ " m.seniority as managerSeniority,"
+						+ " m.passHash as managerPassHash"
+						+ "FROM " + shiftsTable + " as s "
+						+ "WHERE shiftId = ? "
+						+ "LEFT JOIN " + usersTable + " as e "
+						+ "ON " + "s.employeeId = " 
+								+ "e.userId"
+						+ "LEFT JOIN " + usersTable + " as m "
+						+ "ON " + "s.managerId = " 
+								+ "m.userId";
 		
 		try {
 			connection = DBConnection.getInstance().getConnection();
@@ -176,15 +209,25 @@ public class ShiftDAO implements ShiftService {
 						.setEnd  (resSet.getTimestamp("end").toLocalDateTime())
 						.setStatus(ShiftStatusFactory.get(resSet.getString("status")))
 						.build();
-				if (resSet.getInt("userId") != 0) {
+				if (resSet.getInt("managerId")!= 0) {
+					shift.setManager(UserFactory.get(
+										resSet.getInt   ("managerId"), 
+										resSet.getString("managerFirstName"), 
+										resSet.getString("managerLastName"), 
+										resSet.getString("managerEmail"), 
+										resSet.getString("managerType"), 
+										resSet.getInt   ("managerseniority"), 
+										resSet.getString("managerpassHash")));
+				}
+				if (resSet.getInt("employeeId") != 0) {
 					shift.assignEmployee (UserFactory.get(
-											resSet.getInt   ("userId"), 
-											resSet.getString("firstName"), 
-											resSet.getString("lastName"), 
-											resSet.getString("email"), 
-											resSet.getString("type"), 
-											resSet.getInt   ("seniority"), 
-											resSet.getString("passHash")));
+										resSet.getInt   ("employeeId"), 
+										resSet.getString("employeefirstName"), 
+										resSet.getString("employeelastName"), 
+										resSet.getString("employeeemail"), 
+										resSet.getString("employeetype"), 
+										resSet.getInt   ("employeeseniority"), 
+										resSet.getString("employeepassHash")));
 				}
 			}
 			
@@ -211,12 +254,33 @@ public class ShiftDAO implements ShiftService {
 		Connection connection = null;
 		PreparedStatement statement = null;
 		ResultSet resSet = null;
-		String getShifts = "SELECT * FROM " + shiftsTable + " "
-						 + "WHERE start >= ? "
-						 + "AND start < ? "
-						 + "LEFT JOIN " + employeesTable + " "
-							+ "ON " + shiftsTable + ".userId = " 
-									+ employeesTable + ".userId";
+		String getShifts = "SELECT "
+						+ "	s.start as start,"
+						+ "	s.end as end,"
+						+ " s.status as status"
+						+ " e.userId as employeeId"
+						+ "	e.firstName as employeeFirstName,"
+						+ " e.lastName as employeeLastName,"
+						+ " e.email as employeeEmail,"
+						+ " e.type as employeeType,"
+						+ " e.seniority as employeeSeniority,"
+						+ " e.passHash as employeePassHash,"
+						+ " m.userId as managerId,"
+						+ "	m.firstName as managerFirstName,"
+						+ " m.lastName as managerLastName,"
+						+ " m.email as managerEmail,"
+						+ " m.type as managerType,"
+						+ " m.seniority as managerSeniority,"
+						+ " m.passHash as managerPassHash"
+						+ "FROM " + shiftsTable + " as s"
+						+ "WHERE start >= ? "
+						+ "AND start < ? "
+						+ "LEFT JOIN " + usersTable + " as e "
+						+ "ON " + "s.employeeId = " 
+								+ "e.userId"
+						+ "LEFT JOIN " + usersTable + " as m "
+						+ "ON " + "s.managerId = " 
+								+ "m.userId";
 		
 		try {
 			connection = DBConnection.getInstance().getConnection();
@@ -237,15 +301,25 @@ public class ShiftDAO implements ShiftService {
 								 .setEnd(resSet.getTimestamp("end").toLocalDateTime())
 								 .setStatus(ShiftStatusFactory.get(resSet.getString("status")))
 								 .build();
-				if (resSet.getInt("userId") != 0) {
-					 shift.assignEmployee(UserFactory.get(
-											resSet.getInt   ("userId"), 
-											resSet.getString("firstName"), 
-											resSet.getString("lastName"), 
-											resSet.getString("email"), 
-											resSet.getString("type"), 
-											resSet.getInt   ("seniority"), 
-											resSet.getString("passHash") ));
+				if (resSet.getInt("managerId")!= 0) {
+					shift.setManager(UserFactory.get(
+										resSet.getInt   ("managerId"), 
+										resSet.getString("managerFirstName"), 
+										resSet.getString("managerLastName"), 
+										resSet.getString("managerEmail"), 
+										resSet.getString("managerType"), 
+										resSet.getInt   ("managerseniority"), 
+										resSet.getString("managerpassHash")));
+				}
+				if (resSet.getInt("employeeId") != 0) {
+					shift.assignEmployee (UserFactory.get(
+										resSet.getInt   ("employeeId"), 
+										resSet.getString("employeefirstName"), 
+										resSet.getString("employeelastName"), 
+										resSet.getString("employeeemail"), 
+										resSet.getString("employeetype"), 
+										resSet.getInt   ("employeeseniority"), 
+										resSet.getString("employeepassHash")));
 				}
 				shifts.add(shift);
 			}
@@ -272,22 +346,46 @@ public class ShiftDAO implements ShiftService {
 		Connection connection = null;
 		PreparedStatement statement = null;
 		ResultSet resSet = null;
-		String getShifts = "SELECT * FROM " + shiftsTable + " "
-						 + "WHERE start >= ? "
-						 + "AND start < ? "
-						 + "AND userId = ?";
-		
+		String getShifts = "SELECT "
+				+ "	s.start as start,"
+				+ "	s.end as end,"
+				+ " s.status as status"
+				+ " e.userId as employeeId"
+				+ "	e.firstName as employeeFirstName,"
+				+ " e.lastName as employeeLastName,"
+				+ " e.email as employeeEmail,"
+				+ " e.type as employeeType,"
+				+ " e.seniority as employeeSeniority,"
+				+ " e.passHash as employeePassHash,"
+				+ " m.userId as managerId,"
+				+ "	m.firstName as managerFirstName,"
+				+ " m.lastName as managerLastName,"
+				+ " m.email as managerEmail,"
+				+ " m.type as managerType,"
+				+ " m.seniority as managerSeniority,"
+				+ " m.passHash as managerPassHash"
+				+ "FROM " + shiftsTable + " as s"
+				+ "WHERE start >= ? "
+				+ "AND start < ? "
+				+ "AND employeeId = ?"
+				+ "LEFT JOIN " + usersTable + " as e "
+				+ "ON " + "s.employeeId = " 
+						+ "e.userId"
+				+ "LEFT JOIN " + usersTable + " as m "
+				+ "ON " + "s.managerId = " 
+						+ "m.userId";
+
 		try {
 			connection = DBConnection.getInstance().getConnection();
 			statement  = connection.prepareStatement(getShifts);
 			
-	        Timestamp startOfDay = Timestamp.valueOf(date.atStartOfDay());
-	        Timestamp startOfNextDay = Timestamp.valueOf(date.plusDays(1).atStartOfDay());
-	        Shift shift = null;
+		    Timestamp startOfDay = Timestamp.valueOf(date.atStartOfDay());
+		    Timestamp startOfNextDay = Timestamp.valueOf(date.plusDays(1).atStartOfDay());
+		    Shift shift = null;
 			
-	        statement.setTimestamp(1, startOfDay);
-	        statement.setTimestamp(2, startOfNextDay);
-	        statement.setInt	  (3, employee.getUserId());
+		    statement.setTimestamp(1, startOfDay);
+		    statement.setTimestamp(2, startOfNextDay);
+		    statement.setInt	  (3, employee.getUserId());
 			resSet = statement.executeQuery();
 			
 			while(resSet.next()) {
@@ -296,8 +394,27 @@ public class ShiftDAO implements ShiftService {
 								 .setStart(resSet.getTimestamp("start").toLocalDateTime())
 								 .setEnd(resSet.getTimestamp("end").toLocalDateTime())
 								 .setStatus(ShiftStatusFactory.get(resSet.getString("status")))
-								 .assignEmployee(employee)
 								 .build();
+				if (resSet.getInt("managerId")!= 0) {
+					shift.setManager(UserFactory.get(
+										resSet.getInt   ("managerId"), 
+										resSet.getString("managerFirstName"), 
+										resSet.getString("managerLastName"), 
+										resSet.getString("managerEmail"), 
+										resSet.getString("managerType"), 
+										resSet.getInt   ("managerseniority"), 
+										resSet.getString("managerpassHash")));
+				}
+				if (resSet.getInt("employeeId") != 0) {
+					shift.assignEmployee (UserFactory.get(
+										resSet.getInt   ("employeeId"), 
+										resSet.getString("employeefirstName"), 
+										resSet.getString("employeelastName"), 
+										resSet.getString("employeeemail"), 
+										resSet.getString("employeetype"), 
+										resSet.getInt   ("employeeseniority"), 
+										resSet.getString("employeepassHash")));
+				}
 				shifts.add(shift);
 			}
 		} catch(SQLException e) {
@@ -323,9 +440,33 @@ public class ShiftDAO implements ShiftService {
 		Connection connection = null;
 		PreparedStatement statement = null;
 		ResultSet resSet = null;
-		String getShifts = "SELECT * FROM " + shiftsTable + " "
-						 + "WHERE start >= ? "
-						 + "AND start < ? ";
+		String getShifts = "SELECT "
+						+ "	s.start as start,"
+						+ "	s.end as end,"
+						+ " s.status as status"
+						+ " e.userId as employeeId"
+						+ "	e.firstName as employeeFirstName,"
+						+ " e.lastName as employeeLastName,"
+						+ " e.email as employeeEmail,"
+						+ " e.type as employeeType,"
+						+ " e.seniority as employeeSeniority,"
+						+ " e.passHash as employeePassHash,"
+						+ " m.userId as managerId,"
+						+ "	m.firstName as managerFirstName,"
+						+ " m.lastName as managerLastName,"
+						+ " m.email as managerEmail,"
+						+ " m.type as managerType,"
+						+ " m.seniority as managerSeniority,"
+						+ " m.passHash as managerPassHash"
+						+ "FROM " + shiftsTable + " "
+						+ "WHERE start >= ? "
+						+ "AND start < ? "
+						+ "LEFT JOIN " + usersTable + " as e "
+						+ "ON " + "s.employeeId = " 
+								+ "e.userId"
+						+ "LEFT JOIN " + usersTable + " as m "
+						+ "ON " + "s.managerId = " 
+								+ "m.userId";
 		
 		try {
 			connection = DBConnection.getInstance().getConnection();
@@ -349,14 +490,26 @@ public class ShiftDAO implements ShiftService {
 								 .setStatus(ShiftStatusFactory.get(resSet.getString("status")))
 								 .build();
 				if (resSet.getInt("userId") != 0) {
-					 shift.assignEmployee(UserFactory.get(
-											resSet.getInt   ("userId"), 
-											resSet.getString("firstName"), 
-											resSet.getString("lastName"), 
-											resSet.getString("email"), 
-											resSet.getString("type"), 
-											resSet.getInt   ("seniority"), 
-											resSet.getString("passHash") ));
+					if (resSet.getInt("managerId")!= 0) {
+						shift.setManager(UserFactory.get(
+											resSet.getInt   ("managerId"), 
+											resSet.getString("managerFirstName"), 
+											resSet.getString("managerLastName"), 
+											resSet.getString("managerEmail"), 
+											resSet.getString("managerType"), 
+											resSet.getInt   ("managerseniority"), 
+											resSet.getString("managerpassHash")));
+					}
+					if (resSet.getInt("employeeId") != 0) {
+						shift.assignEmployee (UserFactory.get(
+											resSet.getInt   ("employeeId"), 
+											resSet.getString("employeefirstName"), 
+											resSet.getString("employeelastName"), 
+											resSet.getString("employeeemail"), 
+											resSet.getString("employeetype"), 
+											resSet.getInt   ("employeeseniority"), 
+											resSet.getString("employeepassHash")));
+					}
 				}
 				shifts.add(shift);
 			}
@@ -383,10 +536,34 @@ public class ShiftDAO implements ShiftService {
 		Connection connection = null;
 		PreparedStatement statement = null;
 		ResultSet resSet = null;
-		String getShifts = "SELECT * FROM " + shiftsTable + " "
-						 + "WHERE start >= ? "
-						 + "AND start < ? "
-						 + "AND userId = ?";
+		String getShifts = "SELECT "
+						+ "	s.start as start,"
+						+ "	s.end as end,"
+						+ " s.status as status"
+						+ " e.userId as employeeId"
+						+ "	e.firstName as employeeFirstName,"
+						+ " e.lastName as employeeLastName,"
+						+ " e.email as employeeEmail,"
+						+ " e.type as employeeType,"
+						+ " e.seniority as employeeSeniority,"
+						+ " e.passHash as employeePassHash,"
+						+ " m.userId as managerId,"
+						+ "	m.firstName as managerFirstName,"
+						+ " m.lastName as managerLastName,"
+						+ " m.email as managerEmail,"
+						+ " m.type as managerType,"
+						+ " m.seniority as managerSeniority,"
+						+ " m.passHash as managerPassHash"
+						+ "FROM " + shiftsTable + " "
+						+ "WHERE start >= ? "
+						+ "AND start < ? "
+						+ "AND employeeId = ?"
+						+ "LEFT JOIN " + usersTable + " as e "
+						+ "ON " + "s.employeeId = " 
+								+ "e.userId"
+						+ "LEFT JOIN " + usersTable + " as m "
+						+ "ON " + "s.managerId = " 
+								+ "m.userId";
 		
 		try {
 			connection = DBConnection.getInstance().getConnection();
@@ -411,6 +588,26 @@ public class ShiftDAO implements ShiftService {
 								 .setStatus(ShiftStatusFactory.get(resSet.getString("status")))
 								 .assignEmployee(employee)
 								 .build();
+				if (resSet.getInt("managerId")!= 0) {
+					shift.setManager(UserFactory.get(
+										resSet.getInt   ("managerId"), 
+										resSet.getString("managerFirstName"), 
+										resSet.getString("managerLastName"), 
+										resSet.getString("managerEmail"), 
+										resSet.getString("managerType"), 
+										resSet.getInt   ("managerseniority"), 
+										resSet.getString("managerpassHash")));
+				}
+				if (resSet.getInt("employeeId") != 0) {
+					shift.assignEmployee (UserFactory.get(
+										resSet.getInt   ("employeeId"), 
+										resSet.getString("employeefirstName"), 
+										resSet.getString("employeelastName"), 
+										resSet.getString("employeeemail"), 
+										resSet.getString("employeetype"), 
+										resSet.getInt   ("employeeseniority"), 
+										resSet.getString("employeepassHash")));
+				}
 				shifts.add(shift);
 			}
 		} catch(SQLException e) {
@@ -436,7 +633,8 @@ public class ShiftDAO implements ShiftService {
 						+ "start = ?,"
 						+ "end = ?, "
 						+ "status = ?, "
-						+ "userId = ? "
+						+ "employeeId = ?"
+						+ "managerId = ? "
 						+ "WHERE shiftId = ?";
 		Connection 		  connection    = null;
 		PreparedStatement statement     = null;
@@ -449,7 +647,8 @@ public class ShiftDAO implements ShiftService {
 			statement.setTimestamp(2, Timestamp.valueOf(shift.getEnd()));
 			statement.setString   (3, shift.getStatus().toString());
 			statement.setInt	  (4, shift.getEmployee() != null ? shift.getEmployee().getUserId() : 0);
-			statement.setInt	  (5, shift.getShiftId());
+			statement.setInt	  (5, shift.getManager().getUserId());
+			statement.setInt	  (6, shift.getShiftId());
 			
 			statement.executeUpdate();
 			

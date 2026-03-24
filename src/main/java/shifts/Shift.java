@@ -4,6 +4,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 
 import users.Employee;
+import users.Manager;
 import users.User;
 
 /**
@@ -15,6 +16,7 @@ import users.User;
  */
 public class Shift {
 	
+	private static final String NOT_MANAGER = "User is not a manager.";
 	private static final String ONLY_EMPLOYEES = "Only employees may be assigned.";
 	private static final String DURATION_EX = "Shift end must be after shift start.";
 
@@ -26,6 +28,7 @@ public class Shift {
 	private LocalDateTime end;
 	private ShiftStatus   status;
 	private Employee	  employee;
+	private Manager		  manager;
 	
 	// Getters/Setters
 	public int getShiftId() {
@@ -114,6 +117,18 @@ public class Shift {
 		return employee != null;
 	}
 	
+	public void setManager(User user) {
+		if (!user.isManager()) {
+			throw new IllegalArgumentException(NOT_MANAGER);
+		} else {
+			this.manager = (Manager)user;
+		}
+	}
+	
+	public Manager getManager() {
+		return this.manager;
+	}
+	
 	/**
 	 * Builder for Shift objects.
 	 */
@@ -127,6 +142,7 @@ public class Shift {
 		private LocalDateTime end;
 		private ShiftStatus   status;
 		private Employee	  employee;
+		private Manager		  manager;
 		
 		
 		public Builder setShiftId(int shiftId) {
@@ -149,6 +165,11 @@ public class Shift {
 			return this;
 		}
 		
+		public Builder setManager(Manager manager) {
+			this.manager = manager;
+			return this;
+		}
+		
 		public Builder assignEmployee(User user) {
 			if (user.isManager()) {
 				throw new IllegalArgumentException(ONLY_EMPLOYEES);
@@ -168,6 +189,7 @@ public class Shift {
 						 employee != null ? ShiftStatusFactory.get(ASSIGNED) :
 						 ShiftStatusFactory.get(OPEN);
 			s.employee = employee;
+			s.manager  = manager;
 			
 			return s;
 		}

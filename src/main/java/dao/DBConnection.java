@@ -20,7 +20,6 @@ public class DBConnection {
     private static final String dbName      	 = "ShiftManager";
     private static final String usersTable	 	 = "users";
     private static final String shiftsTable		 = "shifts";
-    private static final String managersTable 	 = "managers";
     private static final String baseURL     	 = "jdbc:mysql://localhost/";
     private static final String fullURL			 = baseURL + dbName + "?serverTimezone=America/Toronto";
 	
@@ -66,7 +65,7 @@ public class DBConnection {
     	String createDB	= " CREATE DATABASE IF NOT EXISTS " + dbName 
 				   		+ " DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci";
     	
-    	String createEmployeesTable 
+    	String createUsersTable 
     			= "CREATE TABLE IF NOT EXISTS " + usersTable + " ("
     				+ "userId		int			NOT NULL UNIQUE AUTO_INCREMENT, "
     				+ "firstName	varchar(50)	NOT NULL, "
@@ -83,6 +82,7 @@ public class DBConnection {
     				+ "shiftId		int			NOT NULL UNIQUE AUTO_INCREMENT, "
     				+ "start		timestamp	NOT NULL, "
     				+ "end			timestamp	NOT NULL, "
+    				+ "status		varchar(20) NOT NULL,"
     				+ "employeeId	int			NULL, "
     				+ "managerId	int			NOT NULL, "
     				+ "CONSTRAINT shifts_PK PRIMARY KEY (shiftId), "
@@ -102,7 +102,7 @@ public class DBConnection {
     	try (Connection setupConnection = DriverManager.getConnection(fullURL, dbUser, dbPassword);
     			Statement statement = setupConnection.createStatement()) {
     			// Create the tables
-    			statement.executeUpdate(createEmployeesTable);
+    			statement.executeUpdate(createUsersTable);
 				statement.executeUpdate(createShiftsTable);
 				
     	}
