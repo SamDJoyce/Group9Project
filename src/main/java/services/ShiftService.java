@@ -6,6 +6,7 @@ import java.util.List;
 
 import shifts.Shift;
 import users.Employee;
+import users.Manager;
 
 /**
  * Interface defining the available interactions with
@@ -24,7 +25,8 @@ public interface ShiftService {
 	 * @return		a new shift object
 	 */
 	Shift createShift(LocalDateTime start,
-					  LocalDateTime end);
+					  LocalDateTime end,
+					  Manager 		manager);
 	
 	/**
 	 * Create a shift with an employee assigned.
@@ -36,6 +38,7 @@ public interface ShiftService {
 	 */
 	Shift createShift(LocalDateTime start,
 			 		  LocalDateTime end,
+			 		  Manager 		manager,
 			 		  Employee      employee);
 	
 	/**
