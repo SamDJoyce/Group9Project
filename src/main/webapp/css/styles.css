@@ -10,7 +10,7 @@
 body {
     background-color: #f5f7fa;
     color: #2c3e50;
-    padding: 40px;
+    padding: 30px;
     line-height: 1.6;
 }
 
@@ -182,8 +182,8 @@ p {
 .dashboard-section {
     background-color: #ffffff;
     padding: 24px 28px;
-    border-radius: 8px;
-    box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.06);
 }
 
 .dashboard-section h3 {
@@ -275,6 +275,75 @@ p {
 .dashboard-section h3 {
     font-weight: 600;
 }
-body {
-    background-color: #eef2f5;
+
+/* Employee Dashboard */
+.profile-list,
+.announcement-list {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+}
+
+.profile-list li,
+.announcement-list li {
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #ecf0f1;
+    color: #2c3e50;
+}
+
+.profile-list li:last-child,
+.announcement-list li:last-child {
+    border-bottom: none;
+}
+
+.dashboard-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+.dashboard-table th,
+.dashboard-table td {
+    padding: 12px 14px;
+    border: 1px solid #dfe6e9;
+    text-align: left;
+    font-size: 14px;
+}
+
+.dashboard-table th {
+    background-color: #f4f6f8;
+    color: #2c3e50;
+    font-weight: 600;
+}
+
+.empty-cell {
+    text-align: center;
+    color: #7f8c8d;
+    font-style: italic;
+}
+
+.top-bar {
+    align-items: flex-start;
+}
+
+.dashboard-header {
+    max-width: 700px;
+}
+
+.statusMessage {
+    background-color: #eaf6ff;
+    border-left: 5px solid #3498db;
+    padding: 12px 16px;
+    margin: 20px 0;
+    border-radius: 6px;
+}
+
+.status-badge {
+    background-color: #d4edda;
+    color: #2e7d32;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
 }

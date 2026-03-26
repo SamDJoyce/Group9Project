@@ -1,5 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"
+    import="users.User"
+%>
+<%
+    HttpSession s = request.getSession(false);
+    User manager = (User) request.getAttribute("manager");
 %>
 
 <!DOCTYPE html>
@@ -14,19 +19,23 @@
 <div class="dashboard-container">
 
     <div class="top-bar">
-    <h1>Manager Dashboard</h1>
+        <h1>Manager Dashboard</h1>
 
-    <div class="user-info">
-        <span class="user-name">Manager</span>
-        <a href="<%= request.getContextPath() %>/login" class="btn logout">Logout</a>
+        <% if (s != null && s.getAttribute("userId") != null && manager != null) { %>
+            <div class="user-info">
+                <span class="user-name"><%= manager.getFirstName() %> <%= manager.getLastName() %></span>
+                <a href="<%= request.getContextPath() %>/logout" class="btn logout">Logout</a>
+            </div>
+        <% } %>
     </div>
-</div>
 
-<p class="dashboard-intro">
-    Manage employees, shifts, and scheduling tasks from one central workspace.
-</p>
+    <p class="dashboard-intro">
+        Manage employees, shifts, and scheduling tasks from one central workspace.
+    </p>
 
-    <h2 class="dashboard-subtitle">Welcome, Manager</h2>
+    <h2 class="dashboard-subtitle">
+        Welcome, <%= manager != null ? manager.getFirstName() : "Manager" %>
+    </h2>
 
     <div class="dashboard-grid">
 
