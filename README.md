@@ -141,7 +141,7 @@ For the next phase, we plan to:
 
 - Sam Joyce – Main development and repo setup  
 - Yashbir (Yash) – Documentation and support  
-- Team Members – Feature development and testing  
+- Neslihan - UI Development  
 
 ---
 
