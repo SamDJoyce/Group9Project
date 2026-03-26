@@ -60,7 +60,7 @@
             <p class="section-text">Plan, assign, and review work shifts efficiently.</p>
 
             <div class="section-actions">
-                <a href="#" class="btn small-btn">Create Shift</a>
+                <a href="<%= request.getContextPath() %>/createShift" class="btn small-btn">Create Shift</a>
                 <a href="#" class="btn small-btn">Assign Shift</a>
                 <a href="#" class="btn small-btn">View Schedule</a>
             </div>
