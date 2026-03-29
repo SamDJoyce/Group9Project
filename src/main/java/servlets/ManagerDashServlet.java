@@ -18,7 +18,7 @@ import dao.UserDAO;
  */
 @WebServlet("/managerDash")
 public class ManagerDashServlet extends HttpServlet {
-	private static final String MAN_DASH_JSP = "/WEB-INF/views/managerDashboard.jsp";
+	private static final String MAN_DASH_JSP = "/WEB-INF/views/ManagerDashboard.jsp";
 	private static final long serialVersionUID = 1L;
 	
 	private static final UserService userServ = new UserDAO();
