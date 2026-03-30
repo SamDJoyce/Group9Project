@@ -45,7 +45,7 @@
         <h3>Shift Details</h3>
         <p class="section-text">Fill out the form to add a new shift to the schedule.</p>
 
-        <form action="<%= request.getContextPath() %>/createShift" method="post" class="shift-form">
+        <form action="<%= request.getContextPath() %>/newShift" method="post" class="shift-form">
             <div class="form-grid">
                 <div class="form-group">
                     <label for="shiftDate">Shift Date</label>
