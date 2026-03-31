@@ -141,7 +141,9 @@ For the next phase, we plan to:
 
 - Sam Joyce – Main development and repo setup  
 - Yashbir (Yash) – Documentation and support  
-- Neslihan - UI Development  
+- Neslihan - UI Development
+- Mohamed Abdullahi - Dev work Manager Dashboard
+- Shimaa Abouzeid - Unit tests
 
 ---
 
