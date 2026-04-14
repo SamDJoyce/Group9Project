@@ -165,8 +165,8 @@ class WorkDayTest {
 					   .build();
 		Shift second = new Shift.Builder()
 					   .setShiftId(2)
-					   .setStart(date.atTime(12, 0))
-					   .setEnd(date.atTime(14, 0))
+					   .setStart(date.atTime(16, 0))
+					   .setEnd(date.atTime(18, 0))
 					   .assignEmployee(empl)
 					   .build();
 		workDay.addShift(first);

@@ -12,20 +12,24 @@
 
 <body>
 	<h2>ShiftManager — Login</h2><br>
-
 <%
-    String error = (String) request.getAttribute("loginError");
-    if (error != null) {
-%>
-    	<p style="color:red">Login error: <%= error %></p>
-<%
-    }
-    
+    // Status messages
     String status = (String) request.getAttribute("status");
     if (status != null){
+    	if ("successfullCreation".equalsIgnoreCase(status)){
 %>
-		<p style="color:green">Account created successfully!</p>
+			<p style="color:green">Account created successfully!</p>
 <%
+    	} else if ("failedCreation".equalsIgnoreCase(status)){
+%>
+			<p style="color:red">Account creation failed.</p>
+<%    		
+    	} else if ("loginError".equalsIgnoreCase(status)) {
+%>
+    		<p style="color:red">Login error.</p>
+<%
+    	}
+    	
     }
 %>
 

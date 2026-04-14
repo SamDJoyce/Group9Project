@@ -15,7 +15,6 @@ public class Employee extends User {
 	/**
 	 * Stored as minutes for precision
 	 */
-	protected int seniority;
 	protected ShiftEligibilityStrat eligibility;
 	
 	// Constructors
@@ -44,7 +43,7 @@ public class Employee extends User {
 	}
 	
 	public Boolean isType(EmployeeType type) {
-		return type.isType(type);
+		return this.type != null && this.type.isType(type);
 	}
 	
 	public Boolean isManager() {
@@ -54,7 +53,6 @@ public class Employee extends User {
 	// Builder
 	public static class Builder extends User.Builder<Builder> {
 		protected EmployeeType type;
-		protected int 		   seniority;
 		protected ShiftEligibilityStrat eligibility;
 		
 		public Builder setType(EmployeeType type) {
