@@ -22,6 +22,7 @@ class WorkDayTest {
     private LocalDateTime dayEnd;
     private Employee empl;
     private Employee empl2;
+    private Shift shift;
 
     @BeforeEach
     void setUp() {
@@ -47,23 +48,22 @@ class WorkDayTest {
 				        		"partTime", 
 				        		0, 
 				        		"987654321" );
+        shift = new Shift();
     }
 	
     @Test
     void validShiftWithinDayShouldBeAccepted() {
-        Shift shift = new Shift.Builder()
-        					   .setShiftId(1)
-        					   .setStart(date.atTime(9, 0))
-        					   .setEnd(date.atTime(13, 0))
-        					   .build();
-
+        shift = new Shift.Builder()
+					   .setShiftId(1)
+					   .setStart(date.atTime(9, 0))
+					   .setEnd(date.atTime(13, 0))
+					   .build();
         assertTrue(workDay.isValid(shift));
     }
     
     @Test
     void shouldRejectOverlappingShiftForSameEmployee() {
 
-        
     	Shift first = new Shift.Builder()
         		.setShiftId(1)
         		.setStart(date.atTime(9,0))
@@ -87,6 +87,27 @@ class WorkDayTest {
     }
     
     @Test
+    void shouldRejectShiftThatFullyOverlapsExisting() {
+        Shift first = new Shift.Builder()
+                .setStart(date.atTime(10, 0))
+                .setEnd(date.atTime(12, 0))
+                .assignEmployee(empl)
+                .build();
+
+        Shift covering = new Shift.Builder()
+                .setStart(date.atTime(9, 0))
+                .setEnd(date.atTime(13, 0))
+                .assignEmployee(empl)
+                .build();
+
+        workDay.addShift(first);
+
+        // ❗ This SHOULD fail logically, but currently may pass
+        assertThrows(IllegalArgumentException.class,
+                () -> workDay.addShift(covering));
+    }
+    
+    @Test
     void overlappingShiftForDifferentEmployeesAreAllowed() {
     	Shift first = new Shift.Builder()
 					   .setShiftId(1)
@@ -104,6 +125,26 @@ class WorkDayTest {
 		workDay.addShift(second);
 		
 		assertEquals(2, workDay.getShifts().size());
+    }
+    
+    @Test
+    void shiftsThatTouchButDoNotOverlapAreAllowed() {
+        Shift first = new Shift.Builder()
+                .setStart(date.atTime(9, 0))
+                .setEnd(date.atTime(12, 0))
+                .assignEmployee(empl)
+                .build();
+
+        Shift second = new Shift.Builder()
+                .setStart(date.atTime(12, 0)) // touches boundary
+                .setEnd(date.atTime(15, 0))
+                .assignEmployee(empl)
+                .build();
+
+        workDay.addShift(first);
+        workDay.addShift(second);
+
+        assertEquals(2, workDay.getShifts().size());
     }
     
     @Test
@@ -197,11 +238,83 @@ class WorkDayTest {
 		assertEquals(Duration.ofHours(4), worked);
     }
     
+    @Test
+    void getTimeWorkedReturnsZeroWhenNoShifts() {
+        Duration worked = workDay.getTimeWorked(1);
+        assertEquals(Duration.ZERO, worked);
+    }
+    
+    @Test
+    void getTotalTimeWorkedIgnoresUnassignedShifts() {
+        Shift assigned = new Shift.Builder()
+                .setStart(date.atTime(9, 0))
+                .setEnd(date.atTime(11, 0))
+                .assignEmployee(empl)
+                .build();
+
+        Shift unassigned = new Shift.Builder()
+                .setStart(date.atTime(12, 0))
+                .setEnd(date.atTime(14, 0))
+                .build();
+
+        workDay.addShift(assigned);
+        workDay.addShift(unassigned);
+
+        Duration worked = workDay.getTotalTimeWorked();
+
+        assertEquals(Duration.ofHours(2), worked);
+    }
     
     @Test
     void shouldCalculateTimeToCover() {
         Duration coverage = workDay.getTimeToCover();
         assertEquals(Duration.ofHours(13), coverage);
+    }
+    
+    @Test
+    void getTimeToCoverWithNullTimesThrows() {
+        WorkDay wd = new WorkDay(date);
+
+        assertThrows(NullPointerException.class, wd::getTimeToCover);
+    }
+    
+    @Test
+    void setDayStartWithWrongDateThrows() {
+        WorkDay wd = new WorkDay(date);
+
+        assertThrows(IllegalStateException.class, () ->
+                wd.setDayStart(date.plusDays(1).atTime(8, 0))
+        );
+    }
+
+    @Test
+    void setDayEndWithWrongDateThrows() {
+        WorkDay wd = new WorkDay(date);
+
+        assertThrows(IllegalStateException.class, () ->
+                wd.setDayEnd(date.plusDays(1).atTime(20, 0))
+        );
+    }
+    
+    @Test
+    void isTodayReturnsTrueForSameDate() {
+        assertTrue(workDay.isToday(date.atTime(10, 0)));
+    }
+
+    @Test
+    void isTodayReturnsFalseForDifferentDate() {
+        assertFalse(workDay.isToday(date.plusDays(1).atTime(10, 0)));
+    }
+    
+    @Test
+    void addShiftRejectsInvalidShiftOutsideHours() {
+        Shift invalid = new Shift.Builder()
+                .setStart(date.atTime(1, 0))
+                .setEnd(date.atTime(2, 0))
+                .build();
+
+        assertThrows(IllegalArgumentException.class,
+                () -> workDay.addShift(invalid));
     }
 
 }
