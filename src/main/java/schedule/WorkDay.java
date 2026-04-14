@@ -207,8 +207,14 @@ public class WorkDay {
 	            LocalDateTime existingStart = existing.getStart();
 	            LocalDateTime existingEnd   = existing.getEnd();
 				// Check if the already assigned shift overlaps with new shift
-	            return  start.isBefore(existingEnd) ||
-	                    end.isAfter(existingStart);
+	            return  (start.isBefore(existingStart) // Overlaps begining of shift
+	            	 &&  end.isAfter(existingStart))	
+	            	 ||
+	                    (start.isAfter(existingStart) // Overlaps end of shift
+	                 &&  start.isBefore(existingEnd))
+	                 ||
+	                 	(start.isAfter(existingStart) // Complete overlap
+	                 &&  end.isBefore(existingEnd));
 	    	}
 	    }
 		return false;
