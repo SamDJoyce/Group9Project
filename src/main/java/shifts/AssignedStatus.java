@@ -14,7 +14,7 @@ public class AssignedStatus implements ShiftStatus {
 
 	private static final String EMPLOYEE_ALREADY_ASSIGNED = "An employee is already assigned to this shift.";
 	private static final String CANCELLED = "cancelled";
-	private static final String COMPLETED = "completed";
+	private static final String COMPLETE = "complete";
 	private static final String ASSIGNED  = "assigned";
 	private static final String OPEN	  = "open";
 	
@@ -40,7 +40,7 @@ public class AssignedStatus implements ShiftStatus {
 
 	@Override
 	public void complete(Shift shift) {
-		shift.setStatus(ShiftStatusFactory.get(COMPLETED));
+		shift.setStatus(ShiftStatusFactory.get(COMPLETE));
 		LocalDateTime time = LocalDateTime.now();
 		
 		if (shift.isAssigned() && time.isAfter(shift.getStart())) {
