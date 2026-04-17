@@ -44,8 +44,8 @@
             <p class="section-text">Access employee records and organize workforce information.</p>
 
             <div class="section-actions">
-                <a href="#" class="btn small-btn">Add Employee</a>
-                <a href="#" class="btn small-btn">View Employees</a>
+                <a href="<%= request.getContextPath() %>/addEmployee" class="btn small-btn">Add Employee</a>
+                <a href="<%= request.getContextPath() %>/viewEmployees" class="btn small-btn">View Employees</a>
             </div>
 
             <ul>
@@ -61,8 +61,8 @@
 
             <div class="section-actions">
                 <a href="<%= request.getContextPath() %>/newShift" class="btn small-btn">Create Shift</a>
-                <a href="#" class="btn small-btn">Assign Shift</a>
-                <a href="#" class="btn small-btn">View Schedule</a>
+                <a href="<%= request.getContextPath() %>/assignShift" class="btn small-btn">Assign Shift</a>
+                <a href="<%= request.getContextPath() %>/viewSchedule" class="btn small-btn">View Schedule</a>
             </div>
 
             <ul>
