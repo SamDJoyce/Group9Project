@@ -6,6 +6,10 @@ import org.junit.platform.suite.api.Suite;
 @Suite
 @SelectClasses({ 
 	AssignedStatusTest.class,
+	CancelledStatusTest.class,
+	CompleteStatusTest.class,
+	OpenStatusTest.class,
+	UserFactoryTest.class,
 	EmployeeTest.class,
 	EmployeeTypeTest.class,
 	ManagerTest.class,

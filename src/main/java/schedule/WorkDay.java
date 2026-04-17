@@ -16,6 +16,9 @@ import shifts.Shift;
  * @author Sam Joyce
  */
 
+/**
+ * 
+ */
 public class WorkDay {
 	
 	// Fields
@@ -188,35 +191,42 @@ public class WorkDay {
 	 * 				the same employee assigned that overlaps	
 	 */
 	private Boolean isDoubleBooked(Shift shift) {
+	    
+	    // Only check if an employee is assigned to the shift
+	    if (!shift.isAssigned()) {
+	        return false;
+	    }
+		// Check each existing shift
+    	for (Shift existing : shifts) {
+    		// Ignore unassigned shifts
+            if (!existing.isAssigned()) {
+                continue;
+            }
+            // Only examine shifts for the same employee
+            if (!existing.getEmployee()
+                         .equals(shift.getEmployee())) {
+                continue;
+            }
+            // Check for overlap
+            if (overlapDetected(shift, existing)) {
+            	return true;
+            }
+    	}
+		return false;
+	}
+	
+	/**
+	 * @param shift		The new shift being created
+	 * @param existing	An existing shift
+	 * @return			True if the shifts overlap
+	 */
+	private Boolean overlapDetected(Shift shift, Shift existing) {
 	    LocalDateTime start = shift.getStart();
 	    LocalDateTime end   = shift.getEnd();
-	    // Only check if an employee is assigned to the shift
-		if (shift.isAssigned()) {
-			// Check each existing shift
-	    	for (Shift existing : shifts) {
-	    		// Ignore existing unassigned shifts
-	            if (!existing.isAssigned()) {
-	                continue;
-	            }
-	            // Only examine shifts for the same employee
-	            if (!existing.getEmployee()
-	                         .equals(shift.getEmployee())) {
-	                continue;
-	            }
-	         
-	            LocalDateTime existingStart = existing.getStart();
-	            LocalDateTime existingEnd   = existing.getEnd();
-				// Check if the already assigned shift overlaps with new shift
-	            return  (start.isBefore(existingStart) // Overlaps begining of shift
-	            	 &&  end.isAfter(existingStart))	
-	            	 ||
-	                    (start.isAfter(existingStart) // Overlaps end of shift
-	                 &&  start.isBefore(existingEnd))
-	                 ||
-	                 	(start.isAfter(existingStart) // Complete overlap
-	                 &&  end.isBefore(existingEnd));
-	    	}
-	    }
-		return false;
+        LocalDateTime existingStart = existing.getStart();
+        LocalDateTime existingEnd   = existing.getEnd();
+        
+        return 	start.isBefore(existingEnd) &&
+        		existingStart.isBefore(end);
 	}
 }

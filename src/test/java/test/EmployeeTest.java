@@ -37,6 +37,28 @@ public class EmployeeTest {
         assertEquals(type.toString(), emp.getType());
     }
 	
+	@Test
+	void testSettersGettersCorrect() {
+		Employee emp = new Employee.Builder().build();
+		
+		emp.setUserId(11);
+		emp.setType(EmployeeType.FULLTIME);
+		emp.setFirstName("Adam");
+		emp.setLastName("Smith");
+		emp.setEmail("aSmith@email.com");
+		emp.setSeniority(22);
+		emp.setPassHash("password123");
+		
+		assertEquals(11, emp.getUserId());
+		assertEquals(EmployeeType.FULLTIME.toString(), emp.getType());
+		assertEquals("Adam", emp.getFirstName());
+		assertEquals("Smith", emp.getLastName());
+		assertEquals("Adam Smith", emp.getFullName());
+		assertEquals("aSmith@email.com", emp.getEmail());
+		assertEquals(22, emp.getSeniority());
+		assertEquals("password123", emp.getPassHash());
+	}
+	
     @Test
     void testIsManagerAlwaysFalse() {
         Employee emp = new Employee.Builder().build();
