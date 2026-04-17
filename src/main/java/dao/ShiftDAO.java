@@ -173,29 +173,27 @@ public class ShiftDAO implements ShiftService {
 		String getShift = "SELECT "
 						+ "	s.start as start,"
 						+ "	s.end as end,"
-						+ " s.status as status"
-						+ " e.userId as employeeId"
+						+ " s.status as status,"
+						+ " e.userId as employeeId,"
 						+ "	e.firstName as employeeFirstName,"
 						+ " e.lastName as employeeLastName,"
 						+ " e.email as employeeEmail,"
 						+ " e.type as employeeType,"
 						+ " e.seniority as employeeSeniority,"
-						+ " e.passHash as employeePassHash"
-						+ " m.userId as managerId"
+						+ " e.passHash as employeePassHash,"
+						+ " m.userId as managerId,"
 						+ "	m.firstName as managerFirstName,"
 						+ " m.lastName as managerLastName,"
 						+ " m.email as managerEmail,"
 						+ " m.type as managerType,"
 						+ " m.seniority as managerSeniority,"
 						+ " m.passHash as managerPassHash"
-						+ "FROM " + shiftsTable + " as s "
-						+ "WHERE shiftId = ? "
-						+ "LEFT JOIN " + usersTable + " as e "
-						+ "ON " + "s.employeeId = " 
-								+ "e.userId"
-						+ "LEFT JOIN " + usersTable + " as m "
-						+ "ON " + "s.managerId = " 
-								+ "m.userId";
+						+ " FROM " + shiftsTable + " as s "
+						+ " LEFT JOIN " + usersTable + " as e "
+						+ " ON " + "s.employeeId = e.userId"
+						+ " LEFT JOIN " + usersTable + " as m "
+						+ " ON " + "s.managerId = m.userId"
+						+ " WHERE shiftId = ? ";
 		
 		try {
 			connection = DBConnection.getInstance().getConnection();
@@ -248,6 +246,93 @@ public class ShiftDAO implements ShiftService {
 		return shift;
 	}
 
+	public List<Shift> getShiftByManagerId(int managerId) {
+		Shift shift = null;
+		List<Shift> shifts = null;
+		Connection connection = null;
+		PreparedStatement statement = null;
+		ResultSet resSet = null;
+		String getShift = "SELECT "
+						+ " s.shiftId as shiftId,"
+						+ "	s.start as start,"
+						+ "	s.end as end,"
+						+ " s.status as status, "
+						+ " e.userId as employeeId, "
+						+ "	e.firstName as employeeFirstName,"
+						+ " e.lastName as employeeLastName,"
+						+ " e.email as employeeEmail,"
+						+ " e.type as employeeType,"
+						+ " e.seniority as employeeSeniority,"
+						+ " e.passHash as employeePassHash,"
+						+ " m.userId as managerId, "
+						+ "	m.firstName as managerFirstName,"
+						+ " m.lastName as managerLastName,"
+						+ " m.email as managerEmail,"
+						+ " m.type as managerType,"
+						+ " m.seniority as managerSeniority,"
+						+ " m.passHash as managerPassHash"
+						+ " FROM " + shiftsTable + " as s "
+						+ " LEFT JOIN " + usersTable + " as e "
+						+ " ON " + "s.employeeId = e.userId"
+						+ " LEFT JOIN " + usersTable + " as m "
+						+ " ON " + "s.managerId = m.userId"
+						+ " WHERE s.managerId = ?"
+						+ " ORDER BY start ASC";
+		
+		try {
+			connection = DBConnection.getInstance().getConnection();
+			statement  = connection.prepareStatement(getShift);
+			statement.setInt(1, managerId);
+			resSet = statement.executeQuery();
+			shifts = new ArrayList<>();
+			// Get all shifts with this managerId attached
+			while (resSet.next()) {
+				shift = new Shift.Builder()
+						.setShiftId(resSet.getInt("shiftId"))
+						.setStart(resSet.getTimestamp("start").toLocalDateTime())
+						.setEnd  (resSet.getTimestamp("end").toLocalDateTime())
+						.setStatus(ShiftStatusFactory.get(resSet.getString("status")))
+						.build();
+				if (resSet.getInt("managerId")!= 0) {
+					shift.setManager(UserFactory.get(
+										resSet.getInt   ("managerId"), 
+										resSet.getString("managerFirstName"), 
+										resSet.getString("managerLastName"), 
+										resSet.getString("managerEmail"), 
+										resSet.getString("managerType"), 
+										resSet.getInt   ("managerseniority"), 
+										resSet.getString("managerpassHash")));
+				}
+				if (resSet.getInt("employeeId") != 0) {
+					shift.assignEmployee (UserFactory.get(
+										resSet.getInt   ("employeeId"), 
+										resSet.getString("employeefirstName"), 
+										resSet.getString("employeelastName"), 
+										resSet.getString("employeeemail"), 
+										resSet.getString("employeetype"), 
+										resSet.getInt   ("employeeseniority"), 
+										resSet.getString("employeepassHash")));
+				}
+				shifts.add(shift);
+			}
+			
+		} catch(SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (resSet!=null) {
+					resSet.close();
+				}
+				if (statement!=null) {
+					statement.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return shifts;
+	}
+	
 	@Override
 	public List<Shift> getShiftsByDay(LocalDate date) {
 		List<Shift> shifts = new ArrayList<>();

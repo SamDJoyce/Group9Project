@@ -53,6 +53,12 @@ public interface ShiftService {
 	Shift getShift(int shiftId); 
 	
 	/**
+	 * @param managerId
+	 * @return			All shifts with this managerId
+	 */
+	List<Shift> getShiftByManagerId(int managerId);
+	
+	/**
 	 * @param date	the desired date.
 	 * @return		a list of all shifts on the chosen day.
 	 */
