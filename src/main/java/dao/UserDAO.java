@@ -5,8 +5,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 import services.UserService;
+import users.Employee;
 import users.User;
 import users.UserFactory;
 
@@ -173,6 +176,49 @@ public class UserDAO implements UserService {
 			}
 		}
 		return user;
+	}
+	
+	public List<Employee> getAllEmployees(){
+		String getAllEmpl = "SELECT * "
+						  + "FROM " + usersTable + " "
+					  	  + "WHERE lower(type) = lower('casual') "
+					  	  + "OR lower(type) = lower('parttime') "
+					  	  + "OR lower(type) = lower('fulltime')";
+		
+		Connection 		  connection    = null;
+		PreparedStatement statement     = null;
+		ResultSet 		  resSet 		= null;
+		Employee		  empl			= null;
+		List<Employee>	  employees		= new ArrayList<>();
+		
+		try {
+			connection = DBConnection.getInstance().getConnection();
+			statement  = connection.prepareStatement(getAllEmpl);
+			resSet     = statement.executeQuery();
+			
+			while (resSet.next()) {
+				empl = (Employee) UserFactory.get(
+							resSet.getInt("userId"),
+							resSet.getString("firstName"),
+							resSet.getString("lastName"),
+							resSet.getString("email"),
+							resSet.getString("type"),
+							resSet.getInt("seniority"),
+							resSet.getString("passHash"));
+				employees.add(empl);
+			}
+		} catch(SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (statement != null) {
+					statement.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return employees;
 	}
 
 	/**

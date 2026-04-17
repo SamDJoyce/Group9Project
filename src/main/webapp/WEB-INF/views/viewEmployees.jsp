@@ -1,5 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+    pageEncoding="UTF-8"
+    import="java.util.List"
+	import="users.Employee"
+%>	
+<% 
+	List<Employee> employees = (List<Employee>)request.getAttribute("employees");    
+%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -36,46 +42,21 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>Emily Carter</td>
-                        <td>emily.carter@example.com</td>
-                        <td>Full-Time</td>
-                        <td><span class="status-badge">Active</span></td>
-                        <td>
-                            <a href="#" class="btn small-btn">Edit</a>
+                <%
+                	for (Employee empl : employees) {
+                %>
+                	<tr>
+                		<td><%= empl.getFullName() %></td>
+                		<td><%= empl.getEmail() %></td>
+                		<td><%= empl.getType() %></td>
+                		<td><span class="status-badge">Active</span></td>
+                		<td><a href="#" class="btn small-btn">Edit</a>
                             <a href="#" class="btn small-btn logout">Remove</a>
                         </td>
-                    </tr>
-                    <tr>
-                        <td>Michael Brown</td>
-                        <td>michael.brown@example.com</td>
-                        <td>Part-Time</td>
-                        <td><span class="status-badge">Active</span></td>
-                        <td>
-                            <a href="#" class="btn small-btn">Edit</a>
-                            <a href="#" class="btn small-btn logout">Remove</a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Sophia Wilson</td>
-                        <td>sophia.wilson@example.com</td>
-                        <td>Casual</td>
-                        <td><span class="status-badge">Active</span></td>
-                        <td>
-                            <a href="#" class="btn small-btn">Edit</a>
-                            <a href="#" class="btn small-btn logout">Remove</a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Daniel Lee</td>
-                        <td>daniel.lee@example.com</td>
-                        <td>Full-Time</td>
-                        <td><span class="status-badge">Active</span></td>
-                        <td>
-                            <a href="#" class="btn small-btn">Edit</a>
-                            <a href="#" class="btn small-btn logout">Remove</a>
-                        </td>
-                    </tr>
+                	</tr>
+                <%
+                	}
+                %>
                 </tbody>
             </table>
         </div>

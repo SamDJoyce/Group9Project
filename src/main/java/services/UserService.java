@@ -1,5 +1,7 @@
 package services;
 
+import java.util.List;
+
 import users.Employee;
 import users.User;
 
@@ -43,6 +45,11 @@ public interface UserService {
 	 * @return			the Employee object
 	 */
 	User getUserByEmail(String email);
+	
+	/**
+	 * @return All Employee users.
+	 */
+	List<Employee> getAllEmployees();
 	
 	/**
 	 * @param userId	Employee's userId
